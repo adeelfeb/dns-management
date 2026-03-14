@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>DNS Control - Options</title>
+</head>
+<body>
+  <h1>DNS Control</h1>
+  <p>Get your DoH URL from the dashboard after adding a device, then paste it below.</p>
+  <label>
+    DoH URL:
+    <input type="url" id="dohUrl" placeholder="https://your-site.com/api/dns-query?device=..." style="width: 100%; max-width: 480px; margin-top: 0.5rem;">
+  </label>
+  <br><br>
+  <button id="save">Save</button>
+  <p id="status" style="margin-top: 1rem; color: #666;"></p>
+  <script src="options.js"></script>
+</body>
+</html>

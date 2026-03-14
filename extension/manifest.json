@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "DNS Control",
+  "version": "0.1.0",
+  "description": "Use DNS Control to filter DNS for this browser. Add a device in the dashboard and paste your DoH URL, or sign in.",
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>", "https://*/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html"
+}

@@ -142,7 +142,7 @@ export default function LoginPage() {
             router.replace('/dashboard').then(() => {
               // Set hash after navigation completes
               if (typeof window !== 'undefined') {
-                window.location.hash = 'blogs';
+                window.location.hash = 'overview';
               }
             });
           } else {
@@ -220,7 +220,7 @@ export default function LoginPage() {
       if (redirectDest === '/dashboard' || !router.query.redirect) {
         router.replace('/dashboard').then(() => {
           if (typeof window !== 'undefined') {
-            window.location.hash = 'blogs';
+            window.location.hash = 'overview';
           }
         });
       } else {
@@ -328,7 +328,7 @@ export default function LoginPage() {
         // Use router.replace then set hash to avoid Next.js router issues
         router.replace('/dashboard').then(() => {
           if (typeof window !== 'undefined') {
-            window.location.hash = 'blogs';
+            window.location.hash = 'overview';
           }
         });
       } else {
@@ -468,6 +468,9 @@ export default function LoginPage() {
               Create one here
             </Link>
           </footer>
+          <p className="auth-home-link">
+            <Link href="/">Use DNS control on all your devices</Link>
+          </p>
 
         </div>
       </div>
@@ -692,6 +695,19 @@ export default function LoginPage() {
           text-decoration: none;
         }
         .cta-link:hover {
+          text-decoration: underline;
+        }
+        .auth-home-link {
+          margin: 1rem 0 0 0;
+          font-size: 0.9rem;
+          color: #64748b;
+          text-align: center;
+        }
+        .auth-home-link a {
+          color: #2563eb;
+          text-decoration: none;
+        }
+        .auth-home-link a:hover {
           text-decoration: underline;
         }
         @keyframes spin {

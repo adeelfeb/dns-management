@@ -10,7 +10,7 @@ export default function PrivacyPanel() {
         </div>
         <h2>Privacy & Confidentiality Commitment</h2>
         <p className="privacy-intro">
-          This platform is an <strong>open-source project</strong> designed to display NBA games, schedules, and scores, plus a blog section.
+          This platform lets you <strong>control DNS for your devices</strong>: block or allow websites per device. Your account, devices, and block/allow rules are stored so the service can apply your preferences. We do not sell your data.
         </p>
       </div>
 
@@ -22,7 +22,7 @@ export default function PrivacyPanel() {
           <div className="privacy-card-content">
             <h3>Your Data is Protected</h3>
             <p>
-              We <strong>do not collect, store, or sell your personal information</strong>. Your data privacy and confidentiality are of the <strong>highest importance to us</strong>.
+              We store only what is needed to run the service: <strong>account details</strong> (name, email, password hash), <strong>devices</strong> you add and their secure tokens, and <strong>block/allow rules</strong> you set. We may optionally log DNS query counts per device for statistics; we <strong>do not sell your data</strong>.
             </p>
           </div>
         </div>
@@ -55,8 +55,8 @@ export default function PrivacyPanel() {
               <div className="feature-icon">
                 <Heart size={24} />
               </div>
-              <h4>Free to Use</h4>
-              <p>View NBA games and schedules, manage blogs, and use the dashboard completely free</p>
+              <h4>Your Control</h4>
+              <p>You decide which sites to block or allow per device; you can revoke a device at any time</p>
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@ export default function PrivacyPanel() {
             <div className="guarantee-text">
               <h3>Enjoy Complete Peace of Mind</h3>
               <p>
-                Enjoy using NBA Games and blogs with complete peace of mind. Your privacy is our top priority, and we're committed to keeping your data safe and secure.
+                Use DNS control with peace of mind. We keep only the data needed to provide the service and do not sell or share it with third parties for marketing.
               </p>
             </div>
           </div>

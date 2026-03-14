@@ -360,6 +360,9 @@ export default function SignupPage() {
               Sign in instead
             </Link>
           </footer>
+          <p className="auth-home-link">
+            <Link href="/">Use DNS control on all your devices</Link>. After verifying your email, add devices and choose the extension or setup file.
+          </p>
 
         </div>
       </div>
@@ -571,6 +574,19 @@ export default function SignupPage() {
           text-decoration: none;
         }
         .cta-link:hover {
+          text-decoration: underline;
+        }
+        .auth-home-link {
+          margin: 1rem 0 0 0;
+          font-size: 0.9rem;
+          color: #64748b;
+          text-align: center;
+        }
+        .auth-home-link a {
+          color: #2563eb;
+          text-decoration: none;
+        }
+        .auth-home-link a:hover {
           text-decoration: underline;
         }
         @keyframes spin {

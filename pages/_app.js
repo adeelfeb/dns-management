@@ -1,6 +1,4 @@
 import '../styles/globals.css';
-import 'ag-grid-community/styles/ag-grid.min.css';
-import 'ag-grid-community/styles/ag-theme-quartz.min.css';
 import Head from 'next/head';
 import { ToastProvider } from '../components/ToastProvider';
 import ErrorBoundary from '../components/ErrorBoundary';

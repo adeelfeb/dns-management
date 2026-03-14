@@ -74,9 +74,9 @@ export default function Navbar() {
 
   const navItems = [
     { href: '/', label: 'Home' },
-    { href: '/blogs', label: 'Blog' },
-    { href: '/information', label: 'Information' },
     { href: '/privacy-policy', label: 'Privacy Policy' },
+    { href: '/login', label: 'Log in' },
+    { href: '/signup', label: 'Sign up' },
   ]
 
   return (
@@ -98,8 +98,8 @@ export default function Navbar() {
               href="/"
               className="text-lg sm:text-xl font-bold no-underline hover:opacity-90 active:opacity-80 transition-opacity inline-block tracking-tight"
             >
-              <span className="text-orange-500">NBA</span>
-              <span className="text-slate-300"> Games</span>
+              <span className="text-orange-500">DNS</span>
+              <span className="text-slate-300"> Control</span>
             </Link>
           </div>
 

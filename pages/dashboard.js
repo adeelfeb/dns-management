@@ -1,20 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+// AG Grid only used on dashboard (UserOverviewTable); load here so other pages stay light
+import 'ag-grid-community/styles/ag-grid.min.css';
+import 'ag-grid-community/styles/ag-theme-quartz.min.css';
 import { safeParseJsonResponse } from '../utils/safeJsonResponse';
 import DashboardLayout from '../components/DashboardLayout';
 import SettingsPanel from '../components/dashboard/SettingsPanel';
-import AddOrigin from '../components/dashboard/AddOrigin';
 import UserOverviewTable from '../components/dashboard/UserOverviewTable';
-import ApiEndpointsPanel from '../components/dashboard/ApiEndpointsPanel';
-import BlogManager from '../components/dashboard/BlogManager';
-import BackupPanel from '../components/dashboard/BackupPanel';
-import SupportPanel from '../components/dashboard/SupportPanel';
-import ResourcesPanel from '../components/dashboard/ResourcesPanel';
 import HelpPanel from '../components/dashboard/HelpPanel';
 import PrivacyPanel from '../components/dashboard/PrivacyPanel';
-import RequestsPanel from '../components/dashboard/RequestsPanel';
-import ChatNow from '../components/dashboard/ChatNow';
+import DevicesPanel from '../components/dashboard/DevicesPanel';
+import BlockAllowPanel from '../components/dashboard/BlockAllowPanel';
 import { getUserFromRequest } from '../lib/auth';
 
 function serializeUser(user) {
@@ -53,61 +50,46 @@ export async function getServerSideProps(context) {
 const NAVIGATION_BY_ROLE = {
   superadmin: [
     { key: 'overview', label: 'Overview' },
-    { key: 'messages', label: 'Messages' },
+    { key: 'devices', label: 'Devices' },
+    { key: 'block-allow-list', label: 'Block / Allow list' },
     { key: 'user-management', label: 'User Management' },
-    { key: 'blogs', label: 'Blogs' },
-    { key: 'requests', label: 'Requests' },
-    { key: 'backup', label: 'Backup' },
-    { key: 'add-origin', label: 'Add Origin' },
-    { key: 'api-endpoints', label: 'API Endpoints' },
     { key: 'help', label: 'Help' },
     { key: 'privacy', label: 'Privacy' },
   ],
   developer: [
     { key: 'overview', label: 'Overview' },
-    { key: 'messages', label: 'Messages' },
+    { key: 'devices', label: 'Devices' },
+    { key: 'block-allow-list', label: 'Block / Allow list' },
     { key: 'user-management', label: 'User Management' },
-    { key: 'blogs', label: 'Blogs' },
-    { key: 'requests', label: 'Requests' },
-    { key: 'backup', label: 'Backup' },
-    { key: 'add-origin', label: 'Add Origin' },
-    { key: 'api-endpoints', label: 'API Endpoints' },
     { key: 'help', label: 'Help' },
     { key: 'privacy', label: 'Privacy' },
   ],
   admin: [
     { key: 'overview', label: 'Overview' },
-    { key: 'blogs', label: 'Blogs' },
-    { key: 'requests', label: 'Requests' },
-    { key: 'add-origin', label: 'Add Origin' },
-    { key: 'api-endpoints', label: 'API Endpoints' },
+    { key: 'devices', label: 'Devices' },
+    { key: 'block-allow-list', label: 'Block / Allow list' },
+    { key: 'user-management', label: 'User Management' },
     { key: 'help', label: 'Help' },
     { key: 'privacy', label: 'Privacy' },
   ],
   hr: [
     { key: 'overview', label: 'Overview' },
-    { key: 'messages', label: 'Messages' },
-    { key: 'blogs', label: 'Blogs' },
-    { key: 'requests', label: 'Requests' },
-    { key: 'add-origin', label: 'Add Origin' },
-    { key: 'api-endpoints', label: 'API Endpoints' },
+    { key: 'devices', label: 'Devices' },
+    { key: 'block-allow-list', label: 'Block / Allow list' },
     { key: 'help', label: 'Help' },
     { key: 'privacy', label: 'Privacy' },
   ],
   hr_admin: [
     { key: 'overview', label: 'Overview' },
-    { key: 'messages', label: 'Messages' },
-    { key: 'blogs', label: 'Blogs' },
-    { key: 'requests', label: 'Requests' },
-    { key: 'add-origin', label: 'Add Origin' },
-    { key: 'api-endpoints', label: 'API Endpoints' },
+    { key: 'devices', label: 'Devices' },
+    { key: 'block-allow-list', label: 'Block / Allow list' },
     { key: 'help', label: 'Help' },
     { key: 'privacy', label: 'Privacy' },
   ],
   base_user: [
-    { key: 'blogs', label: 'Blogs' },
-    { key: 'resources', label: 'Resources' },
-    { key: 'support', label: 'Support' },
+    { key: 'overview', label: 'Overview' },
+    { key: 'devices', label: 'Devices' },
+    { key: 'block-allow-list', label: 'Block / Allow list' },
     { key: 'help', label: 'Help' },
     { key: 'privacy', label: 'Privacy' },
   ],
@@ -115,54 +97,69 @@ const NAVIGATION_BY_ROLE = {
 
 const FALLBACK_NAV = [
   { key: 'overview', label: 'Overview' },
-  { key: 'updates', label: 'Updates' },
-  { key: 'activity', label: 'Recent Activity' },
+  { key: 'devices', label: 'Devices' },
+  { key: 'block-allow-list', label: 'Block / Allow list' },
+  { key: 'help', label: 'Help' },
+  { key: 'privacy', label: 'Privacy' },
 ];
+
+function OverviewBody({ user }) {
+  const [deviceCount, setDeviceCount] = useState(0);
+  const normalizedRole = (user?.role || '').toLowerCase();
+  const showUserManagement = ['admin', 'superadmin', 'developer'].includes(normalizedRole);
+
+  useEffect(() => {
+    let cancelled = false;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    fetch('/api/devices', {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled && data?.data?.devices) setDeviceCount(data.data.devices.length);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
+  return (
+    <div className="overview-body">
+      <p className="overview-intro">
+        You have <strong>{deviceCount}</strong> {deviceCount === 1 ? 'device' : 'devices'}. Add a device to get started, then manage block/allow lists below.
+      </p>
+      <ul className="overview-links">
+        <li><a href="#devices">Devices</a> — Add devices and get setup links.</li>
+        <li><a href="#block-allow-list">Block / Allow list</a> — Manage which sites to block or allow per device.</li>
+        {showUserManagement && (
+          <li><a href="#user-management">User Management</a> — Manage users and roles.</li>
+        )}
+      </ul>
+      {showUserManagement && <UserOverviewTable currentUser={user} />}
+    </div>
+  );
+}
 
 const SECTION_DESCRIPTORS = {
   overview: {
-    subtitle: (user) => {
-      const normalizedRole = (user?.role || '').toLowerCase();
-      if (normalizedRole === 'base_user') return null;
-      return 'View, manage, and monitor all users. Create accounts, mark verification status, pause or resume access.';
-    },
-    body: (user) => {
-      const normalizedRole = (user?.role || '').toLowerCase();
-      if (normalizedRole === 'base_user') {
-        return null;
-      }
-      return <UserOverviewTable currentUser={user} />;
-    },
-  },
-  backup: {
-    subtitle: 'Export all database collections to JSON or Excel. Import a backup file to add entries (invalid or duplicate rows are skipped). Developer and super admin only.',
+    subtitle: 'You have your devices and DNS rules here. Add a device to get started, then manage block/allow lists below.',
     hideHeader: true,
-    body: (user) => <BackupPanel user={user} />,
+    body: (user) => <OverviewBody user={user} />,
   },
-  resources: {
-    subtitle: 'Centralize guidelines, FAQs, and documentation.',
+  devices: {
+    subtitle: 'Add a device to get a unique setup link. Then use the extension or download the setup file for your platform.',
     hideHeader: true,
-    body: () => <ResourcesPanel />,
+    body: (user) => <DevicesPanel user={user} />,
   },
-  support: {
-    subtitle: 'Get help and contact support.',
+  'block-allow-list': {
+    subtitle: 'Block or allow websites for each device. Domains listed here are checked when the device uses our DNS.',
     hideHeader: true,
-    body: () => <SupportPanel />,
+    body: (user) => <BlockAllowPanel user={user} />,
   },
   help: {
-    subtitle: 'Professional development services and support.',
+    subtitle: 'Two ways to enable DNS control: install the browser extension (browser only) or download the setup file for your platform (full device).',
     hideHeader: true,
     body: () => <HelpPanel />,
-  },
-  messages: {
-    subtitle: 'Chat with developers or HR. Messages are stored securely and push notifications can be enabled.',
-    hideHeader: true,
-    body: (user) => <ChatNow user={user} />,
-  },
-  requests: {
-    subtitle: 'View all help requests and contact form submissions.',
-    hideHeader: true,
-    body: () => <RequestsPanel />,
   },
   privacy: {
     subtitle: 'Privacy and confidentiality commitment.',
@@ -172,14 +169,8 @@ const SECTION_DESCRIPTORS = {
   'user-management': {
     subtitle: 'Manage access, roles, and permissions across your organization.',
     panels: [
-      {
-        title: 'Team roster',
-        description: 'View who is active, pending, or requires action.',
-      },
-      {
-        title: 'Role controls',
-        description: 'Assign, update, or revoke roles in a few clicks.',
-      },
+      { title: 'Team roster', description: 'View who is active, pending, or requires action.' },
+      { title: 'Role controls', description: 'Assign, update, or revoke roles in a few clicks.' },
     ],
     listTitle: 'Administrative shortcuts',
     list: [
@@ -187,72 +178,15 @@ const SECTION_DESCRIPTORS = {
       { title: 'Review access requests' },
       { title: 'Audit recent changes' },
     ],
-  },
-  'add-origin': {
-    hideHeader: true,
-    body: () => <AddOrigin />,
-  },
-  'api-endpoints': {
-    hideHeader: true,
-    body: () => <ApiEndpointsPanel />,
-  },
-  blogs: {
-    subtitle: 'Create, manage, and publish SEO-optimized blog posts.',
-    hideHeader: true,
-    body: (user) => <BlogManager user={user} />,
-  },
-  submissions: {
-    subtitle: 'Oversee incoming submissions and coordinate reviews.',
-    panels: [
-      {
-        title: 'Awaiting review',
-        description: 'Assign reviewers and keep momentum on pending submissions.',
-        meta: '4 pending',
-      },
-      {
-        title: 'Completed this week',
-        description: 'Celebrate wins and communicate next steps.',
-      },
-    ],
-  },
-  team: {
-    subtitle: 'Understand how your team is collaborating and contributing.',
-    panels: [
-      {
-        title: 'Engagement',
-        description: 'Spot activity spikes and identify opportunities to support.',
-      },
-      {
-        title: 'Highlights',
-        description: 'Recognize key contributions and share kudos.',
-      },
-    ],
+    body: (user) => <UserOverviewTable currentUser={user} />,
   },
   updates: {
-    subtitle: 'Catch up on new announcements, releases, and reminders.',
-    panels: [
-      {
-        title: 'Announcements',
-        description: 'Organization-wide updates will appear here.',
-      },
-      {
-        title: 'Changelog',
-        description: 'Review what changed since you last signed in.',
-      },
-    ],
+    subtitle: 'Catch up on new announcements and reminders.',
+    panels: [{ title: 'Announcements', description: 'Updates will appear here.' }],
   },
   activity: {
-    subtitle: 'Follow recent actions taken across your workspace.',
-    panels: [
-      {
-        title: 'Team activity',
-        description: 'See who updated records, approved requests, or left notes.',
-      },
-      {
-        title: 'Audit trail',
-        description: 'Keep everything compliant with full transparency.',
-      },
-    ],
+    subtitle: 'Follow recent actions across your workspace.',
+    panels: [{ title: 'Recent activity', description: 'See recent changes.' }],
   },
 };
 
@@ -309,26 +243,23 @@ export default function Dashboard({ user }) {
     return navItems[0]?.key || FALLBACK_NAV[0].key;
   });
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [chatUnreadCount, setChatUnreadCount] = useState(0);
+  const [dnsPromptDismissed, setDnsPromptDismissed] = useState(false);
+  const [deviceCountForPrompt, setDeviceCountForPrompt] = useState(null);
 
-  const refetchChatUnread = useCallback(async () => {
-    const role = (sessionUser?.role || '').toLowerCase();
-    if (!['developer', 'hr', 'hr_admin', 'superadmin'].includes(role)) return;
-    try {
-      const res = await fetch('/api/chat/unread-count', {
-        headers: typeof window !== 'undefined' && localStorage.getItem('token') ? { Authorization: `Bearer ${localStorage.getItem('token')}` } : {},
-        credentials: 'include',
-      });
-      if (res.ok) {
-        const data = await safeParseJsonResponse(res);
-        if (data.success && typeof data.data?.unreadCount === 'number') {
-          setChatUnreadCount(data.data.unreadCount);
-        }
-      }
-    } catch {
-      // ignore
-    }
-  }, [sessionUser?.role]);
+  useEffect(() => {
+    let cancelled = false;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    fetch('/api/devices', {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled && data?.data?.devices) setDeviceCountForPrompt(data.data.devices.length);
+      })
+      .catch(() => setDeviceCountForPrompt(0));
+    return () => { cancelled = true; };
+  }, [activeSection]);
 
   const updateUrlHash = useCallback((key) => {
     if (typeof window === 'undefined') return;
@@ -400,7 +331,7 @@ export default function Dashboard({ user }) {
     };
   }, [resolveSectionKey, updateUrlHash, navItems]);
 
-  const isOverviewSection = activeSection === 'overview' && normalizedRole !== 'base_user';
+  const isOverviewSection = activeSection === 'overview';
 
   useEffect(() => {
     if (!primaryNav.length) return;
@@ -412,20 +343,6 @@ export default function Dashboard({ user }) {
       updateUrlHash(fallbackKey);
     }
   }, [primaryNav, activeSection, updateUrlHash]);
-
-  const canAccessChat = ['developer', 'hr', 'hr_admin', 'superadmin'].includes(normalizedRole);
-  /* Unread count: only poll when NOT on Messages (ChatNow calls onUnreadChange when on Messages) */
-  useEffect(() => {
-    if (!canAccessChat) return;
-    if (activeSection === 'messages') return;
-    refetchChatUnread();
-    const interval = setInterval(refetchChatUnread, 15000);
-    return () => clearInterval(interval);
-  }, [canAccessChat, activeSection, refetchChatUnread]);
-
-  useEffect(() => {
-    if (canAccessChat && activeSection === 'messages') refetchChatUnread();
-  }, [canAccessChat, activeSection, refetchChatUnread]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -474,10 +391,7 @@ export default function Dashboard({ user }) {
     }
   }, [isLoggingOut, router]);
 
-  const resolvedSectionKey =
-    normalizedRole === 'base_user' && activeSection === 'overview'
-      ? 'applications'
-      : activeSection;
+  const resolvedSectionKey = activeSection;
 
   const activeNavItem = primaryNav.find((item) => item.key === activeSection);
   const sectionDescriptor = SECTION_DESCRIPTORS[resolvedSectionKey] || {
@@ -504,7 +418,7 @@ export default function Dashboard({ user }) {
 
   // Ensure sectionTitle is always a string to prevent React warnings
   const safeSectionTitle = typeof sectionTitle === 'string' ? sectionTitle : (Array.isArray(sectionTitle) ? sectionTitle.join(' ') : String(sectionTitle || 'Dashboard'));
-  const pageTitle = `${safeSectionTitle} | NBA Dashboard`;
+  const pageTitle = `${safeSectionTitle} | DNS Control`;
 
   return (
     <>
@@ -519,8 +433,18 @@ export default function Dashboard({ user }) {
         onOpenSettings={handleOpenSettings}
         onLogout={handleLogout}
         isLoggingOut={isLoggingOut}
-        chatUnreadCount={chatUnreadCount}
       >
+        <div className="dashboard-page">
+        {deviceCountForPrompt === 0 && !dnsPromptDismissed && (
+          <div className="dns-prompt-banner">
+            <p className="dns-prompt-title">Use our DNS for this device?</p>
+            <p className="dns-prompt-text">Get setup in one step: use the browser extension (this browser only) or download a setup file (whole device).</p>
+            <div className="dns-prompt-actions">
+              <a href="#devices" className="dns-prompt-btn dns-prompt-btn--primary">Get setup</a>
+              <button type="button" className="dns-prompt-dismiss" onClick={() => setDnsPromptDismissed(true)}>Dismiss</button>
+            </div>
+          </div>
+        )}
         <section className={`section ${isOverviewSection ? 'section--compact' : ''}`}>
           {!isOverviewSection && !hideHeader && (
             <header className="section-header">
@@ -528,7 +452,7 @@ export default function Dashboard({ user }) {
               {sectionSubtitle && <p className="section-subtitle">{sectionSubtitle}</p>}
             </header>
           )}
-          <div className={`section-body ${isOverviewSection ? 'section-body--compact' : ''} ${activeSection === 'messages' ? 'section-body--chat' : ''}`}>
+          <div className={`section-body ${isOverviewSection ? 'section-body--compact' : ''}`}>
             {activeSection === 'settings' ? (
               <SettingsPanel
                 user={sessionUser}
@@ -568,12 +492,7 @@ export default function Dashboard({ user }) {
                   </div>
                 )}
 
-                {hasCustomBody && activeSection === 'messages' && (
-                  <div className="section-custom section-custom--chat">
-                    <ChatNow user={sessionUser} onUnreadChange={refetchChatUnread} />
-                  </div>
-                )}
-                {hasCustomBody && activeSection !== 'messages' && (
+                {hasCustomBody && (
                   <div className="section-custom">{sectionDescriptor.body(sessionUser)}</div>
                 )}
 
@@ -587,545 +506,7 @@ export default function Dashboard({ user }) {
             )}
           </div>
         </section>
-
-        <style jsx>{`
-          .section {
-            display: grid;
-            gap: 1rem;
-            min-height: 100%;
-            margin: 0;
-            padding: 0;
-          }
-
-          .section-header {
-            display: grid;
-            gap: 0.5rem;
-            margin: 0;
-            padding: 0;
-          }
-
-          .section-title {
-            font-size: clamp(1.9rem, 3.5vw, 2.35rem);
-            font-weight: 600;
-            color: #0f172a;
-            margin: 0;
-            padding: 0;
-          }
-
-          .section-subtitle {
-            color: #475569;
-            font-size: 1rem;
-            line-height: 1.6;
-            max-width: 60ch;
-            margin: 0;
-            padding: 0;
-          }
-
-          .section-body {
-            display: grid;
-            gap: 1.2rem;
-            padding-bottom: 0.35rem;
-          }
-
-          .section--compact {
-            gap: 0;
-          }
-
-          .section-body--compact {
-            display: flex;
-            gap: 0;
-            padding-bottom: 0;
-            margin-top: 0;
-          }
-
-          .section-body--compact > * {
-            flex: 1 1 100%;
-            min-width: 0;
-          }
-
-          .section-panels {
-            display: grid;
-            gap: 1.25rem;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          }
-
-          .section-card {
-            border-radius: 1.1rem;
-            background: white;
-            padding: 1.6rem;
-            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
-            display: grid;
-            gap: 0.75rem;
-          }
-
-          .section-card-header {
-            display: flex;
-            align-items: baseline;
-            gap: 0.75rem;
-            justify-content: space-between;
-          }
-
-          .section-card h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #0f172a;
-          }
-
-          .section-card p {
-            color: #607089;
-            line-height: 1.65;
-          }
-
-          .section-meta {
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #2563eb;
-            background: rgba(37, 99, 235, 0.12);
-            padding: 0.35rem 0.65rem;
-            border-radius: 999px;
-          }
-
-          .section-list-wrap {
-            display: grid;
-            gap: 0.75rem;
-            background: white;
-            border-radius: 1.1rem;
-            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
-            padding: 1.6rem;
-          }
-
-          .section-list-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #0f172a;
-          }
-
-          .section-list {
-            list-style: none;
-            display: grid;
-            gap: 0.85rem;
-            margin: 0;
-            padding: 0;
-          }
-
-          .section-list-item {
-            display: grid;
-            gap: 0.3rem;
-            padding-left: 0.2rem;
-          }
-
-          .section-list-item-title {
-            font-weight: 500;
-            color: #0f172a;
-          }
-
-          .section-list-item p {
-            color: #607089;
-            line-height: 1.6;
-          }
-
-          .section-custom {
-            background: white;
-            border-radius: 1.1rem;
-            padding: 1.6rem;
-            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
-          }
-
-          .applications-overview {
-            position: relative;
-            display: grid;
-            gap: 1.75rem;
-            padding: 2rem;
-            border-radius: 1.25rem;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(236, 72, 153, 0.1));
-            border: 1px solid rgba(148, 163, 184, 0.18);
-            overflow: hidden;
-          }
-
-          .applications-overview::before {
-            content: '';
-            position: absolute;
-            inset: -40% -20% auto -20%;
-            height: 240px;
-            background: radial-gradient(circle at top, rgba(37, 99, 235, 0.2), transparent 70%);
-            opacity: 0.65;
-            pointer-events: none;
-          }
-
-          .applications-overview::after {
-            content: '';
-            position: absolute;
-            inset: auto -25% -60% -25%;
-            height: 320px;
-            background: radial-gradient(circle at bottom, rgba(236, 72, 153, 0.18), transparent 70%);
-            opacity: 0.6;
-            pointer-events: none;
-          }
-
-          .applications-overview > * {
-            position: relative;
-            z-index: 1;
-          }
-
-          .applications-hero {
-            display: grid;
-            gap: 0.75rem;
-            padding: 1.35rem 1.6rem;
-            border-radius: 1.1rem;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(148, 163, 184, 0.26);
-            box-shadow: 0 16px 36px rgba(30, 41, 59, 0.16);
-          }
-
-          .applications-hero-pill {
-            justify-self: flex-start;
-            padding: 0.35rem 0.9rem;
-            border-radius: 999px;
-            background: rgba(37, 99, 235, 0.12);
-            color: #1d4ed8;
-            font-weight: 600;
-            font-size: 0.85rem;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-          }
-
-          .applications-hero p {
-            margin: 0;
-            color: #0f172a;
-            line-height: 1.65;
-            font-size: 1.05rem;
-          }
-
-          .applications-hero strong {
-            color: #1d4ed8;
-          }
-
-          .applications-metrics {
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          }
-
-          .applications-metric {
-            display: grid;
-            gap: 0.4rem;
-            padding: 0.95rem 1.1rem;
-            border-radius: 1rem;
-            background: rgba(15, 23, 42, 0.72);
-            color: #e2e8f0;
-            box-shadow: 0 20px 42px rgba(15, 23, 42, 0.28);
-            border: 1px solid rgba(148, 163, 184, 0.28);
-            backdrop-filter: blur(6px);
-          }
-
-          .applications-metric-label {
-            font-size: 0.82rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-weight: 600;
-            color: rgba(226, 232, 240, 0.75);
-          }
-
-          .applications-metric-value {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #f8fafc;
-          }
-
-          .applications-metric-note {
-            font-size: 0.9rem;
-            opacity: 0.76;
-            margin: 0;
-          }
-
-          .applications-basic-grid {
-            display: grid;
-            gap: 1.1rem;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-          }
-
-          .applications-basic-card {
-            position: relative;
-            display: grid;
-            gap: 0.65rem;
-            padding: 1.35rem 1.2rem 1.4rem;
-            border-radius: 1rem;
-            background: rgba(255, 255, 255, 0.96);
-            border: 1px solid rgba(203, 213, 225, 0.7);
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
-            overflow: hidden;
-          }
-
-          .applications-basic-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            opacity: 0.6;
-            pointer-events: none;
-          }
-
-          .applications-basic-card--focus::before {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), transparent 70%);
-          }
-
-          .applications-basic-card--upcoming::before {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), transparent 70%);
-          }
-
-          .applications-basic-card--support::before {
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), transparent 70%);
-          }
-
-          .applications-basic-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.6));
-            border: 1px solid rgba(96, 165, 250, 0.6);
-            box-shadow: 0 12px 28px rgba(37, 99, 235, 0.25);
-          }
-
-          .applications-basic-card--upcoming .applications-basic-icon {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.6));
-            border-color: rgba(110, 231, 183, 0.6);
-            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.24);
-          }
-
-          .applications-basic-card--support .applications-basic-icon {
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.6));
-            border-color: rgba(251, 191, 185, 0.6);
-            box-shadow: 0 12px 28px rgba(236, 72, 153, 0.25);
-          }
-
-          .applications-basic-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: #475569;
-          }
-
-          .applications-basic-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #0f172a;
-          }
-
-          .applications-basic-note {
-            margin: 0;
-            color: #475569;
-            line-height: 1.65;
-            font-size: 0.95rem;
-          }
-
-          .applications-actions {
-            display: grid;
-            gap: 0.85rem;
-            padding: 1.2rem 1.4rem 1.5rem;
-            border-radius: 1rem;
-            background: rgba(15, 23, 42, 0.85);
-            box-shadow: 0 18px 42px rgba(15, 23, 42, 0.25);
-          }
-
-          .applications-actions h2 {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #e2e8f0;
-          }
-
-          .applications-actions-list {
-            margin: 0;
-            padding: 0;
-            display: grid;
-            gap: 0.6rem;
-            list-style: none;
-          }
-
-          .applications-actions-list li {
-            position: relative;
-            display: flex;
-            gap: 0.75rem;
-            align-items: flex-start;
-            padding: 0.85rem 1rem;
-            border-radius: 0.85rem;
-            background: rgba(15, 23, 42, 0.78);
-            border: 1px solid rgba(148, 163, 184, 0.35);
-            color: #cbd5f5;
-          }
-
-          .applications-actions-list li::before {
-            content: '';
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #60a5fa, #a855f7);
-            margin-top: 0.4rem;
-            flex-shrink: 0;
-          }
-
-          .applications-actions-list span {
-            line-height: 1.55;
-          }
-
-          @media (max-width: 720px) {
-            .applications-overview {
-              padding: 1.4rem;
-            }
-            .applications-hero {
-              padding: 1.1rem 1.2rem;
-            }
-            .applications-metrics {
-              grid-template-columns: 1fr;
-            }
-            .applications-basic-grid {
-              grid-template-columns: 1fr;
-            }
-          }
-
-          @media (max-width: 480px) {
-            .applications-overview {
-              padding: 1.1rem;
-              border-radius: 1rem;
-            }
-            .applications-basic-card {
-              padding: 1rem 1rem 1.1rem;
-            }
-            .applications-actions {
-              padding: 1rem 1.1rem 1.2rem;
-            }
-          }
-
-          .empty-state {
-            display: grid;
-            gap: 0.5rem;
-            text-align: center;
-            background: white;
-            border-radius: 1.1rem;
-            padding: 2rem;
-            box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
-          }
-
-          .empty-state h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #0f172a;
-          }
-
-          .empty-state p {
-            color: #64748b;
-          }
-
-          @media (max-width: 960px) {
-
-
-            .section-title {
-              font-size: clamp(1.5rem, 4vw, 1.9rem);
-            }
-            .section-subtitle {
-              font-size: 0.95rem;
-              max-width: 100%;
-            }
-          }
-
-          @media (max-width: 720px) {
-            .section {
-              gap: 1.5rem;
-            }
-            .section-body {
-              gap: 1.25rem;
-              padding-bottom: 0.75rem;
-            }
-
-            .section-panels {
-              grid-template-columns: 1fr;
-              gap: 1rem;
-            }
-
-            .section-card {
-              padding: 1.25rem;
-            }
-
-            .section-card h2 {
-              font-size: 1rem;
-            }
-
-            .section-list-wrap {
-              padding: 1.25rem;
-            }
-
-            .section-list-title {
-              font-size: 0.95rem;
-            }
-
-            .section-custom {
-              padding: 1.25rem;
-            }
-
-            .section-body--chat {
-              max-height: calc(100vh - 6rem);
-              display: flex;
-              flex-direction: column;
-              min-height: 0;
-            }
-            .section-custom--chat {
-              padding: 1rem 1.25rem;
-              min-height: 0;
-              flex: 1;
-              display: flex;
-              flex-direction: column;
-              overflow: hidden;
-            }
-            .section-custom--chat > * {
-              flex: 1;
-              min-height: 320px;
-              max-height: 100%;
-            }
-
-            .empty-state {
-              padding: 1.5rem;
-            }
-          }
-
-          @media (max-width: 480px) {
-
-
-            .section-header {
-              gap: 0.4rem;
-            }
-            .section-title {
-              font-size: 1.5rem;
-            }
-            .section-subtitle {
-              font-size: 0.9rem;
-            }
-            .section-body {
-              gap: 1rem;
-            }
-            .section-card {
-              padding: 1rem;
-              border-radius: 0.9rem;
-            }
-            .section-list-wrap {
-              padding: 1rem;
-              border-radius: 0.9rem;
-            }
-          .section-custom {
-            padding: 1rem;
-            border-radius: 0.9rem;
-          }
-
-          .section-body--chat {
-            max-height: calc(100vh - 5rem);
-          }
-          .section-custom--chat {
-            padding: 0.75rem 1rem;
-          }
-          .section-custom--chat > * {
-            min-height: 300px;
-          }
-          }
-        `}</style>
+        </div>
       </DashboardLayout>
     </>
   );
