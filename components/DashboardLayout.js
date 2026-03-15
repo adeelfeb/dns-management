@@ -187,17 +187,17 @@ export default function DashboardLayout({
           <div className="brand" aria-label="Application" style={{ padding: '0.8rem 0.85rem 0.6rem' }}>
             <div className="brand-mark">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="3" width="8" height="8" rx="1.5" fill="#3B82F6"/>
-                <rect x="13" y="3" width="8" height="8" rx="1.5" fill="#9333EA"/>
-                <rect x="3" y="13" width="8" height="8" rx="1.5" fill="#9333EA"/>
-                <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#3B82F6"/>
+                <rect x="3" y="3" width="8" height="8" rx="1.5" fill="#14b8a6"/>
+                <rect x="13" y="3" width="8" height="8" rx="1.5" fill="#0d9488"/>
+                <rect x="3" y="13" width="8" height="8" rx="1.5" fill="#0d9488"/>
+                <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#14b8a6"/>
               </svg>
             </div>
             <div className="brand-text">
               <span className="brand-title">
-                <span className="brand-title-blue">NBA</span>
+                <span className="brand-title-teal">DNS</span>
                 <span className="brand-title-separator"> </span>
-                <span className="brand-title-purple">Dashboard</span>
+                <span className="brand-title-teal-alt">Control</span>
               </span>
               <span className="brand-subtitle">{roleLabel}</span>
             </div>
@@ -281,8 +281,8 @@ export default function DashboardLayout({
         .dashboard-shell {
           height: 100vh;
           display: flex;
-          background: var(--dashboard-surface, #f8fafc);
-          color: var(--dashboard-foreground, #0f172a);
+          background: var(--dashboard-surface, #faf8f5);
+          color: var(--dashboard-foreground, #1c1917);
           overflow: hidden;
           position: relative;
         }
@@ -293,13 +293,13 @@ export default function DashboardLayout({
           top: 1rem;
           right: 1rem;
           z-index: 1001;
-          background: #ffffff;
-          color: #0f172a;
-          border: 1px solid rgba(148, 163, 184, 0.2);
+          background: #faf8f5;
+          color: #1c1917;
+          border: 1px solid rgba(120, 113, 108, 0.25);
           border-radius: 12px;
           padding: 0.75rem;
           cursor: pointer;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 12px rgba(28, 25, 23, 0.08);
           transition: transform 0.2s ease, box-shadow 0.2s ease;
           width: 48px;
           height: 48px;
@@ -328,22 +328,22 @@ export default function DashboardLayout({
           display: block;
           width: 100%;
           height: 2px;
-          background: #0f172a;
+          background: #1c1917;
           border-radius: 2px;
           transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
         .sidebar {
           width: min(236px, 21vw);
-          background: linear-gradient(180deg, #1a0a10 0%, #1e0f18 35%, #1a1324 70%, #132344 100%);
-          color: #e2e8f0;
+          background: linear-gradient(180deg, #0f2a2a 0%, #13403d 35%, #0d3838 70%, #0f1f1f 100%);
+          color: #e7e5e4;
           display: flex;
           flex-direction: column;
           flex-shrink: 0;
           height: 100%;
           padding: 0;
-          border-right: 1px solid rgba(225, 29, 72, 0.18);
-          box-shadow: 16px 0 42px rgba(30, 10, 18, 0.45);
+          border-right: 1px solid rgba(20, 184, 166, 0.2);
+          box-shadow: 16px 0 42px rgba(15, 42, 42, 0.4);
           transition: transform 0.3s ease;
           position: relative;
           overflow: hidden;
@@ -355,10 +355,10 @@ export default function DashboardLayout({
           position: absolute;
           inset: 0;
           background:
-            radial-gradient(circle at 20% 10%, rgba(225, 29, 72, 0.2), transparent 55%),
-            radial-gradient(circle at 25% -10%, rgba(59, 130, 246, 0.28), transparent 60%),
-            radial-gradient(circle at 85% 0%, rgba(244, 63, 94, 0.12), transparent 65%),
-            linear-gradient(180deg, rgba(225, 29, 72, 0.06), transparent 50%);
+            radial-gradient(circle at 20% 10%, rgba(20, 184, 166, 0.18), transparent 55%),
+            radial-gradient(circle at 25% -10%, rgba(13, 148, 136, 0.2), transparent 60%),
+            radial-gradient(circle at 85% 0%, rgba(45, 212, 191, 0.1), transparent 65%),
+            linear-gradient(180deg, rgba(20, 184, 166, 0.06), transparent 50%);
           opacity: 0.98;
           pointer-events: none;
           z-index: 0;
@@ -384,11 +384,11 @@ export default function DashboardLayout({
           width: 2.75rem;
           height: 2.75rem;
           border-radius: 12px;
-          background: rgba(15, 23, 42, 0.4);
+          background: rgba(15, 42, 42, 0.5);
           display: grid;
           place-items: center;
-          border: 1px solid rgba(148, 197, 253, 0.2);
-          box-shadow: 0 8px 16px rgba(15, 23, 42, 0.3);
+          border: 1px solid rgba(94, 234, 212, 0.25);
+          box-shadow: 0 8px 16px rgba(15, 42, 42, 0.35);
           flex-shrink: 0;
         }
         .brand-mark svg {
@@ -410,20 +410,20 @@ export default function DashboardLayout({
           align-items: center;
           line-height: 1.2;
         }
-        .brand-title-blue {
-          color: #60a5fa;
+        .brand-title-teal {
+          color: #5eead4;
         }
         .brand-title-separator {
-          color: rgba(226, 232, 240, 0.6);
+          color: rgba(231, 229, 228, 0.5);
           margin: 0 0.15rem;
         }
-        .brand-title-purple {
-          color: #a78bfa;
+        .brand-title-teal-alt {
+          color: #99f6e4;
         }
 
         .brand-subtitle {
           font-size: 0.72rem;
-          color: rgba(226, 232, 240, 0.75);
+          color: rgba(231, 229, 228, 0.75);
           text-transform: capitalize;
         }
 
@@ -441,9 +441,9 @@ export default function DashboardLayout({
           text-align: left;
           padding: 0.85rem 1rem;
           border-radius: 18px;
-          border: 1px solid rgba(148, 163, 184, 0.2);
-          background: linear-gradient(135deg, rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.45));
-          color: #eef2ff;
+          border: 1px solid rgba(94, 234, 212, 0.2);
+          background: linear-gradient(135deg, rgba(15, 42, 42, 0.75), rgba(15, 42, 42, 0.45));
+          color: #e7e5e4;
           font-size: 0.9rem;
           font-weight: 500;
           transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -452,23 +452,23 @@ export default function DashboardLayout({
           align-items: center;
           gap: 0.75rem;
           position: relative;
-          box-shadow: 0 18px 32px rgba(2, 6, 23, 0.35);
+          box-shadow: 0 18px 32px rgba(15, 42, 42, 0.35);
           backdrop-filter: blur(8px);
         }
 
         .nav-button:hover,
         .nav-button:focus-visible {
           outline: none;
-          background: linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(15, 23, 42, 0.6));
-          border-color: rgba(96, 165, 250, 0.5);
+          background: linear-gradient(135deg, rgba(20, 184, 166, 0.3), rgba(15, 42, 42, 0.6));
+          border-color: rgba(94, 234, 212, 0.45);
           transform: translateX(4px);
-          box-shadow: 0 24px 40px rgba(2, 6, 23, 0.5);
-          color: #fff;
+          box-shadow: 0 24px 40px rgba(13, 148, 136, 0.35);
+          color: #f0fdfa;
         }
 
         .nav-button.is-active {
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.45), rgba(30, 64, 175, 0.55));
-          border-color: rgba(147, 197, 253, 0.6);
+          background: linear-gradient(135deg, rgba(20, 184, 166, 0.45), rgba(13, 148, 136, 0.5));
+          border-color: rgba(94, 234, 212, 0.5);
           color: #fff;
         }
 
@@ -480,29 +480,28 @@ export default function DashboardLayout({
           transform: translateY(-50%);
           width: 4px;
           height: 60%;
-          background: #60a5fa;
+          background: #14b8a6;
           border-radius: 0 4px 4px 0;
         }
 
-        /* Marketing team - Purple/Pink theme */
         .nav-button--marketing {
-          background: linear-gradient(135deg, rgba(147, 51, 234, 0.32), rgba(129, 140, 248, 0.18));
-          color: #f5e8ff;
-          border-color: rgba(216, 180, 254, 0.45);
+          background: linear-gradient(135deg, rgba(20, 184, 166, 0.25), rgba(15, 42, 42, 0.45));
+          color: #e7e5e4;
+          border-color: rgba(94, 234, 212, 0.25);
         }
 
         .nav-button--marketing:hover,
         .nav-button--marketing:focus-visible {
           outline: none;
-          background: linear-gradient(135deg, rgba(168, 85, 247, 0.5), rgba(129, 140, 248, 0.28));
+          background: linear-gradient(135deg, rgba(20, 184, 166, 0.4), rgba(15, 42, 42, 0.55));
           transform: translateX(4px);
-          box-shadow: 0 20px 38px rgba(147, 51, 234, 0.35);
-          color: #fff;
+          box-shadow: 0 20px 38px rgba(13, 148, 136, 0.3);
+          color: #f0fdfa;
         }
 
         .nav-button--marketing.is-active {
-          background: linear-gradient(135deg, rgba(192, 132, 252, 0.55), rgba(168, 85, 247, 0.4));
-          box-shadow: inset 0 0 0 1px rgba(216, 180, 254, 0.7), 0 6px 20px rgba(168, 85, 247, 0.3);
+          background: linear-gradient(135deg, rgba(45, 212, 191, 0.5), rgba(20, 184, 166, 0.4));
+          box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.6), 0 6px 20px rgba(20, 184, 166, 0.25);
           color: #fff;
         }
 
@@ -514,33 +513,32 @@ export default function DashboardLayout({
           transform: translateY(-50%);
           width: 4px;
           height: 60%;
-          background: #7c3aed;
+          background: #14b8a6;
           border-radius: 0 4px 4px 0;
         }
-        
+
         .nav-button--marketing.is-active .nav-icon {
-          filter: drop-shadow(0 0 4px rgba(192, 132, 252, 0.6));
+          filter: drop-shadow(0 0 4px rgba(94, 234, 212, 0.5));
         }
 
-        /* HR team - Blue theme */
         .nav-button--hr {
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.18));
-          color: #e0edff;
-          border-color: rgba(147, 197, 253, 0.45);
+          background: linear-gradient(135deg, rgba(20, 184, 166, 0.25), rgba(15, 42, 42, 0.45));
+          color: #e7e5e4;
+          border-color: rgba(94, 234, 212, 0.25);
         }
 
         .nav-button--hr:hover,
         .nav-button--hr:focus-visible {
           outline: none;
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(37, 99, 235, 0.3));
+          background: linear-gradient(135deg, rgba(20, 184, 166, 0.4), rgba(15, 42, 42, 0.55));
           transform: translateX(4px);
-          box-shadow: 0 20px 38px rgba(37, 99, 235, 0.35);
-          color: #f8fbff;
+          box-shadow: 0 20px 38px rgba(13, 148, 136, 0.3);
+          color: #f0fdfa;
         }
 
         .nav-button--hr.is-active {
-          background: linear-gradient(135deg, rgba(96, 165, 250, 0.55), rgba(37, 99, 235, 0.45));
-          box-shadow: inset 0 0 0 1px rgba(191, 219, 254, 0.7), 0 6px 20px rgba(59, 130, 246, 0.3);
+          background: linear-gradient(135deg, rgba(45, 212, 191, 0.5), rgba(20, 184, 166, 0.45));
+          box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.6), 0 6px 20px rgba(20, 184, 166, 0.25);
           color: #fff;
         }
 
@@ -552,34 +550,33 @@ export default function DashboardLayout({
           transform: translateY(-50%);
           width: 4px;
           height: 60%;
-          background: #2563eb;
+          background: #14b8a6;
           border-radius: 0 4px 4px 0;
         }
-        
+
         .nav-button--hr.is-active .nav-icon {
-          filter: drop-shadow(0 0 4px rgba(96, 165, 250, 0.6));
+          filter: drop-shadow(0 0 4px rgba(94, 234, 212, 0.5));
         }
 
-        /* All users - Teal/Green theme */
         .nav-button--all {
-          background: linear-gradient(135deg, rgba(45, 212, 191, 0.28), rgba(14, 165, 233, 0.18));
-          color: #ecfdf5;
-          border-color: rgba(153, 246, 228, 0.45);
+          background: linear-gradient(135deg, rgba(20, 184, 166, 0.28), rgba(15, 42, 42, 0.45));
+          color: #e7e5e4;
+          border-color: rgba(94, 234, 212, 0.3);
         }
 
         .nav-button--all:hover,
         .nav-button--all:focus-visible {
           outline: none;
-          background: linear-gradient(135deg, rgba(45, 212, 191, 0.45), rgba(14, 165, 233, 0.28));
+          background: linear-gradient(135deg, rgba(20, 184, 166, 0.4), rgba(15, 42, 42, 0.55));
           transform: translateX(4px);
-          box-shadow: 0 20px 38px rgba(13, 148, 136, 0.35);
+          box-shadow: 0 20px 38px rgba(13, 148, 136, 0.3);
           color: #f0fdfa;
         }
 
         .nav-button--all.is-active {
-          background: linear-gradient(135deg, rgba(94, 234, 212, 0.55), rgba(45, 212, 191, 0.4));
-          box-shadow: inset 0 0 0 1px rgba(153, 246, 228, 0.7), 0 6px 20px rgba(45, 212, 191, 0.3);
-          color: #042f2e;
+          background: linear-gradient(135deg, rgba(45, 212, 191, 0.5), rgba(20, 184, 166, 0.4));
+          box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.6), 0 6px 20px rgba(20, 184, 166, 0.25);
+          color: #fff;
         }
 
         .nav-button--all.is-active::before {
@@ -593,9 +590,9 @@ export default function DashboardLayout({
           background: #14b8a6;
           border-radius: 0 4px 4px 0;
         }
-        
+
         .nav-button--all.is-active .nav-icon {
-          filter: drop-shadow(0 0 4px rgba(94, 234, 212, 0.6));
+          filter: drop-shadow(0 0 4px rgba(94, 234, 212, 0.5));
         }
 
         .nav-icon {
@@ -617,7 +614,7 @@ export default function DashboardLayout({
         }
         
         .nav-button.is-active .nav-icon {
-          filter: drop-shadow(0 0 4px rgba(96, 165, 250, 0.5));
+          filter: drop-shadow(0 0 4px rgba(94, 234, 212, 0.5));
         }
 
         .nav-label {
@@ -638,7 +635,7 @@ export default function DashboardLayout({
           height: 20px;
           padding: 0 6px;
           border-radius: 999px;
-          background: linear-gradient(135deg, #e11d48, #be123c);
+          background: linear-gradient(135deg, #0d9488, #0f766e);
           color: #fff;
           font-size: 0.7rem;
           font-weight: 700;
@@ -646,7 +643,7 @@ export default function DashboardLayout({
           align-items: center;
           justify-content: center;
           margin-left: auto;
-          box-shadow: 0 2px 6px rgba(225, 29, 72, 0.4);
+          box-shadow: 0 2px 6px rgba(13, 148, 136, 0.4);
         }
 
         .sidebar-bottom {
@@ -663,9 +660,9 @@ export default function DashboardLayout({
           text-align: left;
           padding: 0.8rem 1rem;
           border-radius: 16px;
-          border: 1px solid rgba(148, 163, 184, 0.18);
-          background: linear-gradient(135deg, rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.4));
-          color: #e2e8f0;
+          border: 1px solid rgba(94, 234, 212, 0.18);
+          background: linear-gradient(135deg, rgba(15, 42, 42, 0.65), rgba(15, 42, 42, 0.4));
+          color: #e7e5e4;
           font-size: 0.875rem;
           font-weight: 500;
           transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -674,7 +671,7 @@ export default function DashboardLayout({
           align-items: center;
           gap: 0.75rem;
           position: relative;
-          box-shadow: 0 16px 28px rgba(2, 6, 23, 0.35);
+          box-shadow: 0 16px 28px rgba(15, 42, 42, 0.35);
           backdrop-filter: blur(6px);
         }
 
@@ -705,28 +702,28 @@ export default function DashboardLayout({
         }
         
         .secondary-button.is-active .nav-icon {
-          filter: drop-shadow(0 0 4px rgba(96, 165, 250, 0.5));
+          filter: drop-shadow(0 0 4px rgba(94, 234, 212, 0.5));
         }
 
         .secondary-button:hover,
         .secondary-button:focus-visible {
           outline: none;
           transform: translateX(4px);
-          box-shadow: 0 22px 38px rgba(2, 6, 23, 0.45);
-          background: linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(15, 23, 42, 0.55));
-          border-color: rgba(96, 165, 250, 0.5);
+          box-shadow: 0 22px 38px rgba(15, 42, 42, 0.45);
+          background: linear-gradient(135deg, rgba(20, 184, 166, 0.35), rgba(15, 42, 42, 0.55));
+          border-color: rgba(94, 234, 212, 0.45);
           color: #fff;
         }
 
         .secondary-button--settings:hover,
         .secondary-button--settings:focus-visible {
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.45), rgba(30, 64, 175, 0.45));
-          color: #f8fbff;
+          background: linear-gradient(135deg, rgba(20, 184, 166, 0.45), rgba(13, 148, 136, 0.45));
+          color: #f0fdfa;
         }
 
         .secondary-button--settings.is-active {
-          background: linear-gradient(135deg, rgba(96, 165, 250, 0.55), rgba(59, 130, 246, 0.4));
-          box-shadow: inset 0 0 0 1px rgba(191, 219, 254, 0.7), 0 6px 20px rgba(59, 130, 246, 0.3);
+          background: linear-gradient(135deg, rgba(45, 212, 191, 0.5), rgba(20, 184, 166, 0.4));
+          box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.6), 0 6px 20px rgba(20, 184, 166, 0.25);
           color: #fff;
         }
 
@@ -738,7 +735,7 @@ export default function DashboardLayout({
           transform: translateY(-50%);
           width: 4px;
           height: 60%;
-          background: #2563eb;
+          background: #14b8a6;
           border-radius: 0 4px 4px 0;
         }
 
@@ -747,17 +744,18 @@ export default function DashboardLayout({
         }
 
         .secondary-button--logout {
-          background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(248, 113, 113, 0.2));
-          color: #fee2e2;
-          box-shadow: inset 0 0 0 1px rgba(254, 202, 202, 0.4);
-          border-color: rgba(254, 202, 202, 0.4);
+          background: linear-gradient(135deg, rgba(120, 113, 108, 0.4), rgba(87, 83, 78, 0.3));
+          color: #e7e5e4;
+          box-shadow: inset 0 0 0 1px rgba(168, 162, 158, 0.3);
+          border-color: rgba(168, 162, 158, 0.35);
         }
 
         .secondary-button--logout:hover,
         .secondary-button--logout:focus-visible {
-          background: linear-gradient(135deg, rgba(248, 113, 113, 0.45), rgba(239, 68, 68, 0.35));
-          box-shadow: inset 0 0 0 1px rgba(254, 202, 202, 0.55), 0 6px 20px rgba(239, 68, 68, 0.3);
-          color: #fff5f5;
+          background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(185, 28, 28, 0.3));
+          box-shadow: inset 0 0 0 1px rgba(254, 202, 202, 0.4), 0 6px 20px rgba(239, 68, 68, 0.25);
+          color: #fee2e2;
+          border-color: rgba(248, 113, 113, 0.4);
         }
 
         .secondary-button--logout:disabled {

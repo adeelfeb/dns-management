@@ -348,12 +348,11 @@ export default function LoginPage() {
     }
   }
 
-  // Show skeleton loading state while checking authentication
   if (checkingAuth) {
     return (
-      <div className="auth-page">
+      <div className="min-h-screen flex flex-col bg-[#faf8f5]">
         <Navbar />
-        <div className="auth-shell">
+        <div className="flex-1 flex items-center justify-center px-4 pt-24 pb-16 sm:pt-32 sm:pb-20 bg-gradient-to-b from-teal-50/80 via-[#faf8f5] to-teal-50/50">
           <AuthCardSkeleton />
         </div>
         <Footer />
@@ -362,28 +361,28 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="auth-page">
+    <div className="auth-page min-h-screen flex flex-col bg-[#faf8f5]">
       <Navbar />
-      <div className="auth-shell">
-        <div className="auth-card">
+      <div className="auth-shell flex-1 flex items-center justify-center px-4 pt-24 pb-16 sm:pt-32 sm:pb-20 bg-gradient-to-b from-teal-50/80 via-[#faf8f5] to-teal-50/50">
+        <div className="auth-card w-full max-w-[420px] p-6 sm:p-8 rounded-2xl bg-white/95 backdrop-blur-sm shadow-xl shadow-stone-200/50 border border-stone-200/80 flex flex-col gap-6">
           <header className="card-header">
-            <h1>Welcome back</h1>
+            <h1 className="text-2xl font-bold text-stone-900 mb-1">Welcome back</h1>
           </header>
 
           {error && (
-            <div className="alert" role="alert" aria-live="assertive">
+            <div className="rounded-xl py-3 px-4 bg-red-50 text-red-700 border border-red-200 font-medium" role="alert" aria-live="assertive">
               {error}
             </div>
           )}
 
           {needsVerification ? (
             <>
-              <p className="verify-prompt">
-                We&apos;ve sent a verification code to <strong>{pendingEmail}</strong>. Enter it below to sign in.
+              <p className="text-stone-600 text-[0.95rem] leading-relaxed mb-2">
+                We&apos;ve sent a verification code to <strong className="text-stone-900">{pendingEmail}</strong>. Enter it below to sign in.
               </p>
-              <form onSubmit={onVerifySubmit} className="form" noValidate>
-                <label className="field">
-                  <span>Verification Code</span>
+              <form onSubmit={onVerifySubmit} className="grid gap-5 w-full" noValidate>
+                <label className="grid gap-2">
+                  <span className="font-semibold text-stone-800 text-sm">Verification Code</span>
                   <input
                     type="text"
                     inputMode="numeric"
@@ -395,22 +394,27 @@ export default function LoginPage() {
                     onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     maxLength={6}
                     disabled={loading}
+                    className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all"
                   />
                 </label>
-                <button type="submit" disabled={isVerifyDisabled}>
-                  {loading && <span className="spinner" aria-hidden="true" />}
+                <button
+                  type="submit"
+                  disabled={isVerifyDisabled}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-xl font-semibold text-white bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:opacity-70 transition-all shadow-lg shadow-teal-500/25"
+                >
+                  {loading && <span className="spinner w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden="true" />}
                   <span>{loading ? 'Verifying…' : 'Verify & Sign In'}</span>
                 </button>
               </form>
-              <button type="button" className="back-link" onClick={backToSignIn} disabled={loading}>
+              <button type="button" className="mt-1 text-[0.95rem] font-semibold text-teal-600 hover:underline disabled:opacity-70" onClick={backToSignIn} disabled={loading}>
                 ← Back to sign in
               </button>
             </>
           ) : (
             <>
-              <form onSubmit={onSubmit} className="form" noValidate>
-                <label className="field">
-                  <span>Email or Username</span>
+              <form onSubmit={onSubmit} className="grid gap-5 w-full" noValidate>
+                <label className="grid gap-2">
+                  <span className="font-semibold text-stone-800 text-sm">Email or Username</span>
                   <input
                     type="text"
                     inputMode="text"
@@ -422,11 +426,12 @@ export default function LoginPage() {
                     onChange={(e) => setIdentifier(e.target.value)}
                     required
                     disabled={loading}
+                    className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all"
                   />
                 </label>
-                <label className="field">
-                  <span>Password</span>
-                  <div className="password-wrap">
+                <label className="grid gap-2">
+                  <span className="font-semibold text-stone-800 text-sm">Password</span>
+                  <div className="flex rounded-xl border border-stone-200 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/20 overflow-hidden">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       autoComplete="current-password"
@@ -438,389 +443,47 @@ export default function LoginPage() {
                       required
                       minLength={5}
                       disabled={loading}
-                      className="password-input"
+                      className="flex-1 min-w-0 py-3 px-4 border-0 bg-transparent outline-none"
                     />
-                    <span className="password-toggle-wrap">
+                    <span className="flex items-center pr-2">
                       <button
                         type="button"
-                        className="password-toggle"
                         onClick={() => setShowPassword((p) => !p)}
                         tabIndex={-1}
                         aria-label={showPassword ? 'Hide password' : 'Show password'}
                         disabled={loading}
+                        className="p-2 text-stone-500 hover:text-stone-700 rounded-lg"
                       >
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                       </button>
                     </span>
                   </div>
                 </label>
-                <button type="submit" disabled={isDisabled}>
-                  {loading && <span className="spinner" aria-hidden="true" />}
+                <button
+                  type="submit"
+                  disabled={isDisabled}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-xl font-semibold text-white bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:opacity-70 transition-all shadow-lg shadow-teal-500/25"
+                >
+                  {loading && <span className="spinner w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden="true" />}
                   <span>{loading ? 'Signing you in…' : 'Sign In'}</span>
                 </button>
               </form>
             </>
           )}
 
-          <footer className="card-footer">
+          <footer className="flex justify-center gap-2 text-[0.95rem] text-stone-600">
             <span>Need an account?</span>
-            <Link href="/signup" className="cta-link">
+            <Link href="/signup" className="font-semibold text-teal-600 hover:underline">
               Create one here
             </Link>
           </footer>
-          <p className="auth-home-link">
-            <Link href="/">Use DNS control on all your devices</Link>
+          <p className="text-center text-sm text-stone-500 mt-2">
+            <Link href="/" className="text-teal-600 hover:underline">Use DNS control on all your devices</Link>
           </p>
 
         </div>
       </div>
 
-      <style jsx>{`
-        .auth-page {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-        }
-        .auth-shell {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 8rem 1.5rem 4rem;
-          flex: 1;
-          background: radial-gradient(circle at top, rgba(0, 112, 243, 0.15), transparent 55%),
-            radial-gradient(circle at bottom, rgba(35, 159, 255, 0.12), transparent 40%);
-        }
-        .auth-card {
-          width: 100%;
-          max-width: 420px;
-          min-width: 0;
-          padding: 2.5rem 2.5rem 2rem;
-          border-radius: 1.5rem;
-          background: rgba(255, 255, 255, 0.92);
-          box-shadow: 0 24px 60px rgba(15, 35, 95, 0.12);
-          backdrop-filter: blur(6px);
-          animation: fadeIn 0.45s ease 0.05s both;
-          display: flex;
-          flex-direction: column;
-          gap: 1.75rem;
-        }
-        .card-header h1 {
-          font-size: 2rem;
-          font-weight: 700;
-          color: #102a43;
-          margin-bottom: 0.35rem;
-        }
-        .card-header p {
-          color: #4b5d73;
-          line-height: 1.5;
-        }
-        .verify-prompt {
-          color: #4b5d73;
-          line-height: 1.5;
-          margin: 0;
-          font-size: 0.95rem;
-        }
-        .verify-prompt strong {
-          color: #102a43;
-        }
-        .back-link {
-          background: none;
-          border: none;
-          padding: 0;
-          font-size: 0.95rem;
-          color: #0070f3;
-          font-weight: 600;
-          cursor: pointer;
-          text-align: center;
-          margin-top: -0.5rem;
-        }
-        .back-link:hover:not(:disabled) {
-          text-decoration: underline;
-        }
-        .back-link:disabled {
-          cursor: not-allowed;
-          opacity: 0.7;
-        }
-        .alert {
-          border-radius: 0.75rem;
-          padding: 0.75rem 1rem;
-          background: rgba(220, 38, 38, 0.08);
-          color: #b91c1c;
-          border: 1px solid rgba(220, 38, 38, 0.24);
-          font-weight: 500;
-        }
-        .form {
-          display: grid;
-          gap: 1.25rem;
-          width: 100%;
-          min-width: 0;
-        }
-        .field {
-          display: grid;
-          gap: 0.55rem;
-          min-width: 0;
-        }
-        .field span {
-          font-weight: 600;
-          color: #0f1c2f;
-          font-size: 0.94rem;
-        }
-        input {
-          width: 100%;
-          min-width: 0;
-          max-width: 100%;
-          box-sizing: border-box;
-          padding: 0.9rem 1rem;
-          border-radius: 0.9rem;
-          border: 1px solid rgba(15, 35, 95, 0.12);
-          background: #fff;
-          font-size: 1rem;
-          transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        input:focus {
-          outline: none;
-          border-color: rgba(0, 112, 243, 0.55);
-          box-shadow: 0 0 0 4px rgba(0, 112, 243, 0.12);
-        }
-        input:disabled {
-          background: #f5f7fb;
-        }
-        .password-wrap .password-input:disabled {
-          background: transparent;
-        }
-        .password-wrap:has(.password-input:disabled) {
-          background: #f5f7fb;
-        }
-        .password-wrap {
-          display: flex;
-          align-items: stretch;
-          width: 100%;
-          min-width: 0;
-          border-radius: 0.9rem;
-          border: 1px solid rgba(15, 35, 95, 0.12);
-          background: #fff;
-          overflow: hidden;
-        }
-        .password-wrap:focus-within {
-          border-color: rgba(0, 112, 243, 0.55);
-          box-shadow: 0 0 0 4px rgba(0, 112, 243, 0.12);
-        }
-        .password-wrap .password-input {
-          flex: 1;
-          min-width: 0;
-          width: 0;
-          padding: 0.9rem 0 0.9rem 1rem;
-          border: none;
-          border-radius: 0.9rem 0 0 0.9rem;
-          background: transparent;
-          font-size: 1rem;
-          transition: none;
-        }
-        .password-wrap .password-input:focus {
-          outline: none;
-          box-shadow: none;
-        }
-        .password-wrap .password-input::placeholder {
-          color: #9ca3af;
-        }
-        .password-toggle-wrap {
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0 0.5rem;
-        }
-        .password-toggle {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0.4rem;
-          background: transparent;
-          border: none;
-          color: #6b7280;
-          cursor: pointer;
-          border-radius: 0.5rem;
-          transition: color 0.2s ease, background 0.2s ease;
-        }
-        .password-toggle:hover:not(:disabled) {
-          color: #374151;
-          background: rgba(15, 35, 95, 0.06);
-        }
-        .password-toggle:disabled {
-          cursor: not-allowed;
-          opacity: 0.6;
-        }
-        button {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.65rem;
-          padding: 0.95rem 1.25rem;
-          border-radius: 0.95rem;
-          border: none;
-          background: linear-gradient(135deg, #0070f3, #3291ff);
-          color: #fff;
-          font-weight: 600;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
-        }
-        button:not(:disabled):hover {
-          transform: translateY(-1px);
-          box-shadow: 0 12px 32px rgba(0, 112, 243, 0.25);
-        }
-        button:disabled {
-          cursor: not-allowed;
-          opacity: 0.72;
-          box-shadow: none;
-        }
-        .spinner {
-          width: 1rem;
-          height: 1rem;
-          border-radius: 999px;
-          border: 2px solid rgba(255, 255, 255, 0.4);
-          border-top-color: #fff;
-          animation: spin 0.65s linear infinite;
-        }
-        .card-footer {
-          display: flex;
-          justify-content: center;
-          gap: 0.5rem;
-          font-size: 0.95rem;
-          color: #4b5d73;
-        }
-        .cta-link {
-          color: #0070f3;
-          font-weight: 600;
-          text-decoration: none;
-        }
-        .cta-link:hover {
-          text-decoration: underline;
-        }
-        .auth-home-link {
-          margin: 1rem 0 0 0;
-          font-size: 0.9rem;
-          color: #64748b;
-          text-align: center;
-        }
-        .auth-home-link a {
-          color: #2563eb;
-          text-decoration: none;
-        }
-        .auth-home-link a:hover {
-          text-decoration: underline;
-        }
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(12px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @media (max-width: 600px) {
-          .auth-shell {
-            padding: 6rem 1rem 3rem;
-          }
-          .auth-card {
-            padding: 2rem 1.65rem;
-            border-radius: 1.25rem;
-          }
-          .card-header h1 {
-            font-size: 1.75rem;
-          }
-          .card-header p {
-            font-size: 0.9rem;
-          }
-          .password-wrap .password-input {
-            padding: 0.85rem 0 0.85rem 1rem;
-          }
-          .password-toggle-wrap {
-            padding: 0 0.5rem;
-          }
-        }
-        @media (max-width: 480px) {
-          .auth-shell {
-            padding: 5rem 0.75rem 2.5rem;
-          }
-          .auth-card {
-            padding: 1.75rem 1.25rem 1.5rem;
-            gap: 1.5rem;
-            margin: 0 0.25rem;
-          }
-          .card-header h1 {
-            font-size: 1.6rem;
-          }
-          .form {
-            gap: 1.1rem;
-          }
-          input {
-            padding: 0.85rem 0.75rem 0.85rem 0.95rem;
-            font-size: 16px;
-          }
-          .password-wrap .password-input {
-            padding: 0.85rem 0 0.85rem 0.95rem;
-            font-size: 16px;
-          }
-          .password-toggle-wrap {
-            padding: 0 0.4rem;
-          }
-          button {
-            padding: 0.9rem 1.15rem;
-            font-size: 0.95rem;
-            width: 100%;
-          }
-        }
-        @media (max-width: 380px) {
-          .auth-shell {
-            padding: 5rem 0.5rem 2rem;
-          }
-          .auth-card {
-            padding: 1.5rem 1rem;
-          }
-          input {
-            padding: 0.75rem 0.65rem 0.75rem 0.85rem;
-            font-size: 16px;
-          }
-          .password-wrap .password-input {
-            padding: 0.75rem 0 0.75rem 0.85rem;
-            font-size: 16px;
-          }
-          .password-toggle-wrap {
-            padding: 0 0.35rem;
-          }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .auth-card {
-            animation: none;
-          }
-          button,
-          input {
-            transition: none;
-          }
-          .spinner {
-            animation-duration: 1s;
-          }
-        }
-      `}</style>
       <Footer />
     </div>
   );

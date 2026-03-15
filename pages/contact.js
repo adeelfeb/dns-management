@@ -7,57 +7,57 @@ export default function ContactPage() {
   return (
     <>
       <Head>
-        <title>Contact | NBA Games</title>
+        <title>Contact | DNS Control</title>
         <meta 
           name="description" 
-          content="Get in touch with NBA Games. Questions, feedback, or suggestions about our NBA schedule and scores site." 
+          content="Get in touch with DNS Control. Questions, feedback, or support about DNS management." 
         />
         <meta 
           name="keywords" 
-          content="NBA, contact, feedback, support" 
+          content="DNS Control, contact, feedback, support" 
         />
-        <meta property="og:title" content="Contact | NBA Games" />
+        <meta property="og:title" content="Contact | DNS Control" />
         <meta 
           property="og:description" 
-          content="Get in touch with NBA Games." 
+          content="Get in touch with DNS Control." 
         />
         <meta property="og:type" content="website" />
       </Head>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-[#faf8f5]">
         <Navbar />
         <main className="pt-24 pb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10 sm:mb-12">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-stone-900 mb-4">
                 Contact Us
               </h1>
-              <p className="text-base sm:text-xl text-slate-600 max-w-2xl mx-auto px-1">
-                Have questions or feedback about NBA Games? Get in touch.
+              <p className="text-base sm:text-xl text-stone-600 max-w-2xl mx-auto px-1">
+                Have questions or feedback about DNS Control? Get in touch.
               </p>
             </div>
 
             <div className="max-w-4xl mx-auto space-y-12">
               <ContactForm showHeading={false} />
 
-              <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 sm:p-8 md:p-12 shadow-lg w-full min-w-0">
+              <div className="bg-gradient-to-br from-stone-50 to-white rounded-2xl p-6 sm:p-8 md:p-12 shadow-lg shadow-stone-200/50 border border-stone-200/80 w-full min-w-0">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                   <div className="text-center md:text-left">
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Why Choose Us?</h3>
-                    <ul className="space-y-3 text-gray-600 text-sm sm:text-base">
-                      <li>Expert Full-Stack Development</li>
-                      <li>Modern Tech Stack (Next.js, MERN)</li>
-                      <li>Agile Development Process</li>
-                      <li>SEO Optimized Solutions</li>
+                    <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-4">Why DNS Control?</h3>
+                    <ul className="space-y-3 text-stone-600 text-sm sm:text-base">
+                      <li>Simple DNS management</li>
+                      <li>Secure and reliable</li>
+                      <li>Easy-to-use dashboard</li>
+                      <li>Transparent privacy</li>
                     </ul>
                   </div>
 
                   <div className="text-center md:text-left">
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">What We Offer</h3>
-                    <ul className="space-y-3 text-gray-600 text-sm sm:text-base">
-                      <li>Custom Full-Stack Development</li>
-                      <li>E-Commerce Platforms</li>
-                      <li>CMS Development (WordPress/Webflow)</li>
-                      <li>API Integration & Backend</li>
+                    <h3 className="text-lg sm:text-xl font-bold text-stone-900 mb-4">We Can Help</h3>
+                    <ul className="space-y-3 text-stone-600 text-sm sm:text-base">
+                      <li>Account and login support</li>
+                      <li>Feature requests</li>
+                      <li>Technical questions</li>
+                      <li>Privacy and data</li>
                     </ul>
                   </div>
                 </div>

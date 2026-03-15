@@ -258,9 +258,9 @@ export default function SignupPage() {
   // Show skeleton loading state while checking authentication
   if (checkingAuth) {
     return (
-      <div className="auth-page">
+      <div className="min-h-screen flex flex-col bg-[#faf8f5]">
         <Navbar />
-        <div className="auth-shell">
+        <div className="flex-1 flex items-center justify-center px-4 pt-24 pb-16 sm:pt-32 sm:pb-20 bg-gradient-to-b from-teal-50/80 via-[#faf8f5] to-teal-50/50">
           <AuthCardSkeleton />
         </div>
         <Footer />
@@ -269,27 +269,29 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="auth-page">
+    <div className="min-h-screen flex flex-col bg-[#faf8f5]">
       <Navbar />
-      <div className="auth-shell">
-        <div className="auth-card">
-          <header className="card-header">
-            <h1>Create your account</h1>
+      <div className="flex-1 flex items-center justify-center px-4 pt-24 pb-16 sm:pt-32 sm:pb-20 bg-gradient-to-b from-teal-50/80 via-[#faf8f5] to-teal-50/50">
+        <div className="w-full max-w-[440px] p-6 sm:p-8 rounded-2xl bg-white/95 backdrop-blur-sm shadow-xl shadow-stone-200/50 border border-stone-200/80 flex flex-col gap-6">
+          <header>
+            <h1 className="text-2xl font-bold text-stone-900 mb-1">Create your account</h1>
           </header>
 
           {error && (
-            <div 
-              className={`alert ${error.startsWith('✓') ? 'alert-success' : ''}`} 
-              role="alert" 
+            <div
+              className={`rounded-xl py-3 px-4 font-medium border ${
+                error.startsWith('✓') ? 'bg-teal-50 text-teal-800 border-teal-200' : 'bg-red-50 text-red-700 border-red-200'
+              }`}
+              role="alert"
               aria-live="assertive"
             >
               {error}
             </div>
           )}
 
-          <form onSubmit={onSubmit} className="form" noValidate>
-            <label className="field">
-              <span>Full name</span>
+          <form onSubmit={onSubmit} className="grid gap-5 w-full" noValidate>
+            <label className="grid gap-2">
+              <span className="font-semibold text-stone-800 text-sm">Full name</span>
               <input
                 type="text"
                 autoComplete="name"
@@ -300,10 +302,11 @@ export default function SignupPage() {
                 onChange={(e) => setName(e.target.value)}
                 required
                 disabled={loading}
+                className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all"
               />
             </label>
-            <label className="field">
-              <span>Email</span>
+            <label className="grid gap-2">
+              <span className="font-semibold text-stone-800 text-sm">Email</span>
               <input
                 type="email"
                 inputMode="email"
@@ -315,11 +318,12 @@ export default function SignupPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
+                className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all"
               />
             </label>
-            <label className="field">
-              <span>Password</span>
-              <div className="password-wrap">
+            <label className="grid gap-2">
+              <span className="font-semibold text-stone-800 text-sm">Password</span>
+              <div className="flex rounded-xl border border-stone-200 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/20 overflow-hidden">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
@@ -331,375 +335,43 @@ export default function SignupPage() {
                   required
                   minLength={5}
                   disabled={loading}
-                  className="password-input"
+                  className="flex-1 min-w-0 py-3 px-4 border-0 bg-transparent outline-none"
                 />
-                <span className="password-toggle-wrap">
+                <span className="flex items-center pr-2">
                   <button
                     type="button"
-                    className="password-toggle"
                     onClick={() => setShowPassword((p) => !p)}
                     tabIndex={-1}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                     disabled={loading}
+                    className="p-2 text-stone-500 hover:text-stone-700 rounded-lg"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </span>
               </div>
-              {passwordHint && <small className="helper">{passwordHint}</small>}
+              {passwordHint && <small className="text-stone-500 text-xs">{passwordHint}</small>}
             </label>
-            <button type="submit" disabled={isDisabled}>
-              {loading && <span className="spinner" aria-hidden="true" />}
+            <button
+              type="submit"
+              disabled={isDisabled}
+              className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-xl font-semibold text-white bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:opacity-70 transition-all shadow-lg shadow-teal-500/25"
+            >
+              {loading && <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden="true" />}
               <span>{loading ? 'Creating your space…' : 'Create Account'}</span>
             </button>
           </form>
 
-          <footer className="card-footer">
+          <footer className="flex justify-center gap-2 text-[0.95rem] text-stone-600">
             <span>Already registered?</span>
-            <Link href="/login" className="cta-link">
-              Sign in instead
-            </Link>
+            <Link href="/login" className="font-semibold text-teal-600 hover:underline">Sign in instead</Link>
           </footer>
-          <p className="auth-home-link">
-            <Link href="/">Use DNS control on all your devices</Link>. After verifying your email, add devices and choose the extension or setup file.
+          <p className="text-center text-sm text-stone-500 mt-2">
+            <Link href="/" className="text-teal-600 hover:underline">Use DNS control on all your devices</Link>. After verifying your email, add devices and choose the extension or setup file.
           </p>
-
         </div>
       </div>
 
-      <style jsx>{`
-        .auth-page {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-        }
-        .auth-shell {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 8rem 1.5rem 4rem;
-          flex: 1;
-          background: radial-gradient(circle at top, rgba(0, 176, 117, 0.12), transparent 55%),
-            radial-gradient(circle at bottom, rgba(0, 112, 243, 0.14), transparent 45%);
-        }
-        .auth-card {
-          width: 100%;
-          max-width: 440px;
-          min-width: 0;
-          padding: 2.6rem 2.6rem 2.25rem;
-          border-radius: 1.6rem;
-          background: rgba(255, 255, 255, 0.95);
-          box-shadow: 0 26px 68px rgba(12, 54, 102, 0.16);
-          backdrop-filter: blur(8px);
-          display: flex;
-          flex-direction: column;
-          gap: 1.85rem;
-          animation: fadeIn 0.45s ease 0.05s both;
-        }
-        .card-header h1 {
-          font-size: 2rem;
-          font-weight: 700;
-          color: #0f1c2f;
-          margin-bottom: 0.5rem;
-        }
-        .card-header p {
-          color: #516276;
-          line-height: 1.55;
-        }
-        .alert {
-          border-radius: 0.8rem;
-          padding: 0.8rem 1rem;
-          background: rgba(220, 38, 38, 0.08);
-          color: #b91c1c;
-          border: 1px solid rgba(220, 38, 38, 0.22);
-          font-weight: 500;
-        }
-        .alert-success {
-          background: rgba(16, 185, 129, 0.08);
-          color: #059669;
-          border: 1px solid rgba(16, 185, 129, 0.22);
-        }
-        .alert-success {
-          background: rgba(16, 185, 129, 0.08);
-          color: #059669;
-          border: 1px solid rgba(16, 185, 129, 0.22);
-        }
-        .form {
-          display: grid;
-          gap: 1.35rem;
-          width: 100%;
-          min-width: 0;
-        }
-        .field {
-          display: grid;
-          gap: 0.6rem;
-          min-width: 0;
-        }
-        .field span {
-          font-weight: 600;
-          color: #0f1c2f;
-          font-size: 0.94rem;
-        }
-        input {
-          width: 100%;
-          min-width: 0;
-          max-width: 100%;
-          box-sizing: border-box;
-          padding: 0.95rem 1rem;
-          border-radius: 0.95rem;
-          border: 1px solid rgba(13, 48, 89, 0.14);
-          background: #fff;
-          font-size: 1rem;
-          transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        input:focus {
-          outline: none;
-          border-color: rgba(0, 176, 117, 0.55);
-          box-shadow: 0 0 0 4px rgba(0, 176, 117, 0.15);
-        }
-        input:disabled {
-          background: #f5f7fb;
-        }
-        .password-wrap .password-input:disabled {
-          background: transparent;
-        }
-        .password-wrap:has(.password-input:disabled) {
-          background: #f5f7fb;
-        }
-        .password-wrap {
-          display: flex;
-          align-items: stretch;
-          width: 100%;
-          min-width: 0;
-          border-radius: 0.95rem;
-          border: 1px solid rgba(13, 48, 89, 0.14);
-          background: #fff;
-          overflow: hidden;
-        }
-        .password-wrap:focus-within {
-          border-color: rgba(0, 176, 117, 0.55);
-          box-shadow: 0 0 0 4px rgba(0, 176, 117, 0.15);
-        }
-        .password-wrap .password-input {
-          flex: 1;
-          min-width: 0;
-          width: 0;
-          padding: 0.95rem 0 0.95rem 1rem;
-          border: none;
-          border-radius: 0.95rem 0 0 0.95rem;
-          background: transparent;
-          font-size: 1rem;
-          transition: none;
-        }
-        .password-wrap .password-input:focus {
-          outline: none;
-          box-shadow: none;
-        }
-        .password-wrap .password-input::placeholder {
-          color: #9ca3af;
-        }
-        .password-toggle-wrap {
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0 0.5rem;
-        }
-        .password-toggle {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0.4rem;
-          background: transparent;
-          border: none;
-          color: #6b7280;
-          cursor: pointer;
-          border-radius: 0.5rem;
-          transition: color 0.2s ease, background 0.2s ease;
-        }
-        .password-toggle:hover:not(:disabled) {
-          color: #374151;
-          background: rgba(13, 48, 89, 0.06);
-        }
-        .password-toggle:disabled {
-          cursor: not-allowed;
-          opacity: 0.6;
-        }
-        .helper {
-          font-size: 0.8rem;
-          color: #6b7280;
-        }
-        button {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.7rem;
-          padding: 1rem 1.3rem;
-          border-radius: 1rem;
-          border: none;
-          background: linear-gradient(135deg, #00a86b, #00c2a8);
-          color: #fff;
-          font-weight: 600;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
-        }
-        button:not(:disabled):hover {
-          transform: translateY(-1px);
-          box-shadow: 0 14px 36px rgba(0, 176, 117, 0.28);
-        }
-        button:disabled {
-          cursor: not-allowed;
-          opacity: 0.72;
-          box-shadow: none;
-        }
-        .spinner {
-          width: 1rem;
-          height: 1rem;
-          border-radius: 999px;
-          border: 2px solid rgba(255, 255, 255, 0.4);
-          border-top-color: #fff;
-          animation: spin 0.65s linear infinite;
-        }
-        .card-footer {
-          display: flex;
-          justify-content: center;
-          gap: 0.55rem;
-          font-size: 0.96rem;
-          color: #516276;
-        }
-        .cta-link {
-          color: #0070f3;
-          font-weight: 600;
-          text-decoration: none;
-        }
-        .cta-link:hover {
-          text-decoration: underline;
-        }
-        .auth-home-link {
-          margin: 1rem 0 0 0;
-          font-size: 0.9rem;
-          color: #64748b;
-          text-align: center;
-        }
-        .auth-home-link a {
-          color: #2563eb;
-          text-decoration: none;
-        }
-        .auth-home-link a:hover {
-          text-decoration: underline;
-        }
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(12px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @media (max-width: 600px) {
-          .auth-shell {
-            padding: 6rem 1rem 3rem;
-          }
-          .auth-card {
-            padding: 2.1rem 1.75rem 2rem;
-            border-radius: 1.35rem;
-          }
-          .card-header h1 {
-            font-size: 1.75rem;
-          }
-          .card-header p {
-            font-size: 0.9rem;
-          }
-          .password-wrap .password-input {
-            padding: 0.85rem 0 0.85rem 1rem;
-          }
-          .password-toggle-wrap {
-            padding: 0 0.5rem;
-          }
-        }
-        @media (max-width: 480px) {
-          .auth-shell {
-            padding: 5rem 0.75rem 2.5rem;
-          }
-          .auth-card {
-            padding: 1.85rem 1.25rem 1.75rem;
-            gap: 1.5rem;
-            margin: 0 0.25rem;
-          }
-          .card-header h1 {
-            font-size: 1.6rem;
-          }
-          .form {
-            gap: 1.15rem;
-          }
-          input {
-            padding: 0.85rem 0.75rem 0.85rem 0.95rem;
-            font-size: 16px;
-          }
-          .password-wrap .password-input {
-            padding: 0.85rem 0 0.85rem 0.95rem;
-            font-size: 16px;
-          }
-          .password-toggle-wrap {
-            padding: 0 0.4rem;
-          }
-          button {
-            padding: 0.95rem 1.2rem;
-            font-size: 0.95rem;
-            width: 100%;
-          }
-        }
-        @media (max-width: 380px) {
-          .auth-shell {
-            padding: 5rem 0.5rem 2rem;
-          }
-          .auth-card {
-            padding: 1.5rem 1rem;
-          }
-          input {
-            padding: 0.75rem 0.65rem 0.75rem 0.85rem;
-            font-size: 16px;
-          }
-          .password-wrap .password-input {
-            padding: 0.75rem 0 0.75rem 0.85rem;
-            font-size: 16px;
-          }
-          .password-toggle-wrap {
-            padding: 0 0.35rem;
-          }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .auth-card {
-            animation: none;
-          }
-          button,
-          input {
-            transition: none;
-          }
-          .spinner {
-            animation-duration: 1s;
-          }
-        }
-      `}</style>
       <Footer />
     </div>
   );

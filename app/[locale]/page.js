@@ -86,27 +86,39 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="container mx-auto px-4 py-20 sm:py-24 max-w-5xl text-center relative z-10 bg-hero-glow bg-no-repeat bg-[length:120%_120%] bg-[position:50%_-10%]">
-        <h1 className="text-4xl sm:text-5xl font-bold text-stone-900 mb-5 tracking-tight">
-          {t('hero.title')}
-        </h1>
-        <p className="text-xl text-stone-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-          {t('hero.subtitle')}
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href="/signup"
-            className="rounded-full bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-3 text-white font-semibold hover:from-primary-600 hover:to-primary-700 shadow-soft-teal hover:shadow-lg hover:shadow-primary-500/25 transition-all duration-200"
-          >
-            {t('hero.getStarted')}
-          </Link>
-          <Link
-            href="/login"
-            className="rounded-full border-2 border-stone-200 px-6 py-3 font-semibold text-stone-700 hover:bg-stone-50 hover:border-primary-200 hover:text-primary-700 transition-colors duration-200"
-          >
-            {t('hero.logIn')}
-          </Link>
+      {/* Hero: full-width surface, content centered */}
+      <section className="w-full relative z-10 overflow-hidden">
+        {/* Full-bleed background */}
+        <div className="absolute inset-0 bg-hero-glow bg-no-repeat bg-[length:100%_100%] bg-center" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary-50/40 via-transparent to-surface-warm" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-50/20 via-transparent to-accent-50/20" aria-hidden />
+
+        <div className="relative w-full max-w-none mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40">
+          <div className="mx-auto max-w-4xl text-center">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-stone-900 mb-6 sm:mb-8 tracking-tight leading-tight">
+              {t('hero.title')}
+            </h1>
+            <p className="text-lg sm:text-xl md:text-2xl text-stone-600 mb-10 sm:mb-12 max-w-2xl mx-auto leading-relaxed">
+              {t('hero.subtitle')}
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
+              <Link
+                href="/signup"
+                className="rounded-full bg-gradient-to-r from-primary-500 to-primary-600 px-7 py-3.5 sm:px-8 sm:py-4 text-white font-semibold text-base sm:text-lg hover:from-primary-600 hover:to-primary-700 shadow-soft-teal hover:shadow-xl hover:shadow-primary-500/25 transition-all duration-200"
+              >
+                {t('hero.getStarted')}
+              </Link>
+              <Link
+                href="/login"
+                className="rounded-full border-2 border-stone-200 px-7 py-3.5 sm:px-8 sm:py-4 font-semibold text-stone-700 text-base sm:text-lg hover:bg-stone-50 hover:border-primary-200 hover:text-primary-700 transition-colors duration-200"
+              >
+                {t('hero.logIn')}
+              </Link>
+            </div>
+          </div>
         </div>
+        {/* Soft edge into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-surface-warm to-transparent pointer-events-none" aria-hidden />
       </section>
 
       <section className="container mx-auto px-4 py-14 sm:py-16 max-w-5xl relative z-10">

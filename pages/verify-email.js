@@ -145,35 +145,35 @@ export default function VerifyEmailPage() {
   if (!router.isReady) return null;
 
   return (
-    <div className="auth-page">
+    <div className="min-h-screen flex flex-col bg-[#faf8f5]">
       <Navbar />
-      <div className="auth-shell">
-        <div className="auth-card">
-          <header className="card-header">
-            <h1>Verify your email</h1>
-            <p>We've sent a verification code to <strong>{email}</strong></p>
+      <div className="flex-1 flex items-center justify-center px-4 pt-24 pb-16 sm:pt-32 sm:pb-20 bg-gradient-to-b from-teal-50/80 via-[#faf8f5] to-teal-50/50">
+        <div className="w-full max-w-[420px] p-6 sm:p-8 rounded-2xl bg-white/95 backdrop-blur-sm shadow-xl shadow-stone-200/50 border border-stone-200/80 flex flex-col gap-6">
+          <header>
+            <h1 className="text-2xl font-bold text-stone-900 mb-1">Verify your email</h1>
+            <p className="text-stone-600 text-sm">We've sent a verification code to <strong className="text-stone-900">{email}</strong></p>
             {resendCooldown > 0 && (
-              <p className="wait-note">
+              <p className="mt-2 text-stone-500 text-sm italic py-3 px-4 bg-teal-50 border-l-4 border-teal-500 rounded-r-lg">
                 Wait for a while if you haven't received it, then resend.
               </p>
             )}
           </header>
 
           {error && (
-            <div className="alert" role="alert" aria-live="assertive">
+            <div className="rounded-xl py-3 px-4 bg-red-50 text-red-700 border border-red-200 font-medium" role="alert" aria-live="assertive">
               {error}
             </div>
           )}
-          
+
           {success && (
-            <div className="alert alert-success" role="alert" aria-live="polite">
+            <div className="rounded-xl py-3 px-4 bg-teal-50 text-teal-800 border border-teal-200 font-medium" role="alert" aria-live="polite">
               {success}
             </div>
           )}
 
-          <form onSubmit={onSubmit} className="form" noValidate>
-            <label className="field">
-              <span>Verification Code</span>
+          <form onSubmit={onSubmit} className="grid gap-5 w-full" noValidate>
+            <label className="grid gap-2">
+              <span className="font-semibold text-stone-800 text-sm">Verification Code</span>
               <input
                 type="text"
                 inputMode="numeric"
@@ -185,221 +185,38 @@ export default function VerifyEmailPage() {
                 onChange={(e) => setOtp(e.target.value)}
                 required
                 disabled={loading}
+                className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all"
               />
             </label>
-            
-            <button type="submit" disabled={isDisabled}>
-              {loading && <span className="spinner" aria-hidden="true" />}
+
+            <button
+              type="submit"
+              disabled={isDisabled}
+              className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-xl font-semibold text-white bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:opacity-70 transition-all shadow-lg shadow-teal-500/25"
+            >
+              {loading && <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden="true" />}
               <span>{loading ? 'Verifying…' : 'Verify Email'}</span>
             </button>
-            
-            <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
-                <button 
-                    type="button" 
-                    onClick={onResend} 
-                    disabled={resending || resendCooldown > 0}
-                    className="text-btn"
-                >
-                    {resending 
-                      ? 'Sending...' 
-                      : resendCooldown > 0 
-                        ? `Resend Code (${resendCooldown}s)` 
-                        : 'Resend Code'}
-                </button>
+
+            <div className="text-center mt-1">
+              <button
+                type="button"
+                onClick={onResend}
+                disabled={resending || resendCooldown > 0}
+                className="text-sm font-medium text-teal-600 hover:underline disabled:opacity-70 disabled:no-underline"
+              >
+                {resending ? 'Sending...' : resendCooldown > 0 ? `Resend Code (${resendCooldown}s)` : 'Resend Code'}
+              </button>
             </div>
           </form>
 
-          <footer className="card-footer">
+          <footer className="flex justify-center gap-2 text-[0.95rem] text-stone-600">
             <span>Wrong email?</span>
-            <Link href="/signup" className="cta-link">
-              Create a new account
-            </Link>
+            <Link href="/signup" className="font-semibold text-teal-600 hover:underline">Create a new account</Link>
           </footer>
-
         </div>
       </div>
 
-      <style jsx>{`
-        .auth-page {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-        }
-        .auth-shell {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 8rem 1.5rem 4rem;
-          flex: 1;
-          background: radial-gradient(circle at top, rgba(0, 112, 243, 0.15), transparent 55%),
-            radial-gradient(circle at bottom, rgba(35, 159, 255, 0.12), transparent 40%);
-        }
-        .auth-card {
-          width: 100%;
-          max-width: 420px;
-          padding: 2.5rem 2.5rem 2rem;
-          border-radius: 1.5rem;
-          background: rgba(255, 255, 255, 0.92);
-          box-shadow: 0 24px 60px rgba(15, 35, 95, 0.12);
-          backdrop-filter: blur(6px);
-          animation: fadeIn 0.45s ease 0.05s both;
-          display: flex;
-          flex-direction: column;
-          gap: 1.75rem;
-        }
-        .card-header h1 {
-          font-size: 2rem;
-          font-weight: 700;
-          color: #102a43;
-          margin-bottom: 0.35rem;
-        }
-        .card-header p {
-          color: #4b5d73;
-          line-height: 1.5;
-        }
-        .wait-note {
-          color: #64748b;
-          font-size: 0.9rem;
-          font-style: italic;
-          margin-top: 0.5rem;
-          padding: 0.75rem;
-          background: rgba(0, 112, 243, 0.05);
-          border-left: 3px solid #0070f3;
-          border-radius: 0.5rem;
-        }
-        .alert {
-          border-radius: 0.75rem;
-          padding: 0.75rem 1rem;
-          background: rgba(220, 38, 38, 0.08);
-          color: #b91c1c;
-          border: 1px solid rgba(220, 38, 38, 0.24);
-          font-weight: 500;
-        }
-        .alert-success {
-          background: rgba(16, 185, 129, 0.08);
-          color: #059669;
-          border: 1px solid rgba(16, 185, 129, 0.22);
-        }
-        .form {
-          display: grid;
-          gap: 1.25rem;
-        }
-        .field {
-          display: grid;
-          gap: 0.55rem;
-        }
-        .field span {
-          font-weight: 600;
-          color: #0f1c2f;
-          font-size: 0.94rem;
-        }
-        input {
-          padding: 0.9rem 1rem;
-          border-radius: 0.9rem;
-          border: 1px solid rgba(15, 35, 95, 0.12);
-          background: #fff;
-          font-size: 1rem;
-          transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        input:focus {
-          outline: none;
-          border-color: rgba(0, 112, 243, 0.55);
-          box-shadow: 0 0 0 4px rgba(0, 112, 243, 0.12);
-        }
-        input:disabled {
-          background: #f5f7fb;
-        }
-        button {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.65rem;
-          padding: 0.95rem 1.25rem;
-          border-radius: 0.95rem;
-          border: none;
-          background: linear-gradient(135deg, #0070f3, #3291ff);
-          color: #fff;
-          font-weight: 600;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
-        }
-        button:not(:disabled):hover {
-          transform: translateY(-1px);
-          box-shadow: 0 12px 32px rgba(0, 112, 243, 0.25);
-        }
-        button:disabled {
-          cursor: not-allowed;
-          opacity: 0.72;
-          box-shadow: none;
-        }
-        .text-btn {
-            background: none;
-            color: #0070f3;
-            padding: 0.5rem;
-            font-size: 0.9rem;
-            box-shadow: none;
-        }
-        .text-btn:hover {
-            text-decoration: underline;
-            background: none;
-            box-shadow: none;
-            transform: none;
-        }
-        .spinner {
-          width: 1rem;
-          height: 1rem;
-          border-radius: 999px;
-          border: 2px solid rgba(255, 255, 255, 0.4);
-          border-top-color: #fff;
-          animation: spin 0.65s linear infinite;
-        }
-        .card-footer {
-          display: flex;
-          justify-content: center;
-          gap: 0.5rem;
-          font-size: 0.95rem;
-          color: #4b5d73;
-        }
-        .cta-link {
-          color: #0070f3;
-          font-weight: 600;
-          text-decoration: none;
-        }
-        .cta-link:hover {
-          text-decoration: underline;
-        }
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(12px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @media (max-width: 600px) {
-          .auth-shell {
-            padding: 6rem 1rem 3rem;
-          }
-          .auth-card {
-            padding: 2rem 1.65rem;
-            border-radius: 1.25rem;
-          }
-          .card-header h1 {
-            font-size: 1.75rem;
-          }
-          .card-header p {
-            font-size: 0.9rem;
-          }
-        }
-      `}</style>
       <Footer />
     </div>
   );
