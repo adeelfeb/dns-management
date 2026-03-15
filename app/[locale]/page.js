@@ -5,7 +5,9 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import LocaleSwitcher from '../../components/LocaleSwitcher';
 
-function AccordionItem({ step, index, isOpen, onToggle }) {
+function AccordionItem({ step, index, isOpen, onToggle, idPrefix = 'how-step' }) {
+  const id = `${idPrefix}-${index}`;
+  const headingId = `${idPrefix}-heading-${index}`;
   return (
     <div className="border border-primary-100 rounded-xl bg-white/95 overflow-hidden shadow-soft hover:shadow-soft-teal hover:border-primary-200 transition-all duration-200">
       <button
@@ -13,8 +15,8 @@ function AccordionItem({ step, index, isOpen, onToggle }) {
         onClick={onToggle}
         className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left font-medium text-stone-900 hover:bg-primary-50/50 transition-colors"
         aria-expanded={isOpen}
-        aria-controls={`how-step-${index}`}
-        id={`how-step-heading-${index}`}
+        aria-controls={id}
+        id={headingId}
       >
         <span className="flex items-center gap-3">
           <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 text-primary-700 text-sm font-semibold shrink-0 shadow-sm">
@@ -31,9 +33,9 @@ function AccordionItem({ step, index, isOpen, onToggle }) {
         </span>
       </button>
       <div
-        id={`how-step-${index}`}
+        id={id}
         role="region"
-        aria-labelledby={`how-step-heading-${index}`}
+        aria-labelledby={headingId}
         className={`grid transition-[grid-template-rows] duration-200 ease-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
       >
         <div className="overflow-hidden">
@@ -51,10 +53,17 @@ export default function HomePage() {
   const tCommon = useTranslations('common');
   const locale = useLocale();
   const [openStep, setOpenStep] = useState(null);
+  const [openSetupDevice, setOpenSetupDevice] = useState(null);
 
   const howSteps = [1, 2, 3, 4].map((i) => ({
     title: t(`howItWorks.steps.${i}.title`),
     details: t(`howItWorks.steps.${i}.details`),
+  }));
+
+  const setupDevices = ['windows', 'linux', 'android', 'ios', 'macos'].map((key) => ({
+    key,
+    title: t(`setupByDevice.${key}.title`),
+    details: t(`setupByDevice.${key}.steps`),
   }));
 
   const localePrefix = `/${locale}`;
@@ -150,6 +159,23 @@ export default function HomePage() {
         <div className="mt-8 p-5 sm:p-6 bg-primary-50/70 rounded-xl text-sm text-stone-600 border border-primary-100 shadow-soft">
           <p className="font-semibold text-stone-700 mb-2">{t('howItWorks.flowTitle')}</p>
           <p className="leading-relaxed">{t('howItWorks.flowDetail')}</p>
+        </div>
+      </section>
+
+      <section id="setup-by-device" className="container mx-auto px-4 py-14 sm:py-16 max-w-3xl border-t border-stone-200/80 relative z-10">
+        <h2 className="text-3xl font-bold text-stone-900 mb-2">{t('setupByDevice.heading')}</h2>
+        <p className="text-stone-600 mb-8">{t('setupByDevice.intro')}</p>
+        <div className="space-y-3">
+          {setupDevices.map((device, idx) => (
+            <AccordionItem
+              key={device.key}
+              step={{ title: device.title, details: device.details }}
+              index={idx}
+              isOpen={openSetupDevice === device.key}
+              onToggle={() => setOpenSetupDevice(openSetupDevice === device.key ? null : device.key)}
+              idPrefix="setup-device"
+            />
+          ))}
         </div>
       </section>
 

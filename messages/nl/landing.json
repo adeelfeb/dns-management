@@ -63,5 +63,29 @@
     "tagline": "Gebruik DNS-beheer op al je apparaten.",
     "signUp": "Registreren",
     "logIn": "Inloggen"
+  },
+  "setupByDevice": {
+    "heading": "Instellen per apparaat",
+    "intro": "Na het toevoegen van een apparaat in het dashboard, download het setupbestand voor je platform of volg deze stappen. Klik op je apparaat om uit te klappen.",
+    "windows": {
+      "title": "Windows",
+      "steps": "Optie A – Setupbestand: 1) Download het setupbestand in het dashboard (Setupbestand voor Windows → wordt dns-control-setup.ps1). 2) Rechtsklik het bestand → Uitvoeren met PowerShell. Kies indien gevraagd Uitvoeren als administrator. 3) Bij een scriptfout: open PowerShell als administrator en voer uit: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser — voer daarna het script opnieuw uit. 4) Klaar. Optie B – Handmatig: Instellingen → Netwerk en internet → je verbinding → DNS → DNS over HTTPS aan en plak je DoH-URL uit het dashboard."
+    },
+    "linux": {
+      "title": "Linux",
+      "steps": "Optie A – Browser: 1) Download het setupbestand voor Linux en voer uit (chmod +x dns-control-setup.sh en ./dns-control-setup.sh) om je DoH-URL te zien. 2) Chrome: Instellingen → Privacy en beveiliging → Beveiliging → beveiligde DNS → Met → plak de URL. Firefox: Instellingen → Netwerkinstellingen → DNS over HTTPS inschakelen → Aangepast → plak de URL. Optie B – Volledig systeem: Gebruik een DoH-stub (bijv. dnscrypt-proxy) of systemd-resolved met je DoH-URL."
+    },
+    "android": {
+      "title": "Android",
+      "steps": "Firefox: 1) Installeer Firefox uit de Play Store. 2) In Firefox Menu → Instellingen → DNS over HTTPS. 3) Aan, kies Aangepast en plak je DoH-URL uit het dashboard. 4) Klaar — sites in Firefox gebruiken DNS Control. Volledig apparaat: Android Private DNS gebruikt DoT; gebruik Firefox of een app met aangepaste DoH-URL’s."
+    },
+    "ios": {
+      "title": "iOS",
+      "steps": "1) Download in het dashboard het setupbestand voor iOS (dns-control.mobileconfig). 2) Open het bestand en tik op Installeren; voer eventueel je wachtcode in. 3) Instellingen → Algemeen → VPN- en apparaatbeheer → DNS Control → Installeren. 4) Klaar — je iPhone of iPad gebruikt DNS Control."
+    },
+    "macos": {
+      "title": "macOS",
+      "steps": "1) Download in het dashboard het setupbestand voor Mac (dns-control.mobileconfig). 2) Dubbelklik het bestand. In Systeeminstellingen verschijnt het profiel; klik Installeren. 3) Je Mac gebruikt DNS Control. Later verwijderen kan via Systeeminstellingen → Profielen."
+    }
   }
 }

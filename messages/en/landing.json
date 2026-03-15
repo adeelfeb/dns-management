@@ -63,5 +63,29 @@
     "tagline": "Use DNS control on all your devices.",
     "signUp": "Sign up",
     "logIn": "Log in"
+  },
+  "setupByDevice": {
+    "heading": "Setup by device",
+    "intro": "After adding a device in the dashboard, download the setup file for your platform or follow these steps. Click your device to expand.",
+    "windows": {
+      "title": "Windows",
+      "steps": "Option A – Setup file (easiest): 1) Download the setup file from the dashboard (Get setup file for Windows → saves as dns-control-setup.ps1). 2) Right‑click the file → Run with PowerShell. If prompted, choose Run as Administrator. 3) If you see a script execution error, open PowerShell as Administrator and run: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser — then run the script again. 4) Done. Option B – Manual: Settings → Network & Internet → your connection → DNS → turn on DNS over HTTPS and paste your DoH URL (from the dashboard)."
+    },
+    "linux": {
+      "title": "Linux",
+      "steps": "Option A – Easiest (browser): 1) Download the setup file for Linux from the dashboard and run it (chmod +x dns-control-setup.sh then ./dns-control-setup.sh) to see your DoH URL. 2) In Chrome: Settings → Privacy and security → Security → use secure DNS → With → paste the URL. In Firefox: Settings → Network settings → Enable DNS over HTTPS → Custom → paste the URL. Option B – Full system: Use a DoH stub (e.g. dnscrypt-proxy) or systemd-resolved with your DoH URL from the dashboard."
+    },
+    "android": {
+      "title": "Android",
+      "steps": "Easiest (Firefox): 1) Install Firefox from the Play Store. 2) In Firefox tap Menu → Settings → DNS over HTTPS. 3) Turn On, choose Custom, and paste your DoH URL from the dashboard. 4) Done — sites in Firefox use DNS Control. Full device: Android’s Private DNS uses DoT not DoH; use Firefox above or an app that supports custom DoH URLs."
+    },
+    "ios": {
+      "title": "iOS",
+      "steps": "1) In the dashboard, get the setup file for iOS (saves as dns-control.mobileconfig). 2) Open the file (e.g. from Mail or Files). Tap Install and enter your passcode if asked. 3) Go to Settings → General → VPN & Device Management → DNS Control → Install if needed. 4) Done — your iPhone or iPad will use DNS Control."
+    },
+    "macos": {
+      "title": "macOS",
+      "steps": "1) In the dashboard, get the setup file for Mac (saves as dns-control.mobileconfig). 2) Double‑click the file. In System Settings the profile will appear; click Install and confirm. 3) Your Mac will use DNS Control. Remove later from System Settings → Profiles if needed."
+    }
   }
 }

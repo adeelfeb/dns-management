@@ -40,14 +40,27 @@ export default async function handler(req, res) {
 
   if (os === 'windows') {
     const script = `# DNS Control - Windows DoH setup
-# Run this script as Administrator (right-click -> Run with PowerShell as Administrator)
+# STEPS:
+# 1. Right-click this file -> "Run with PowerShell"
+# 2. If prompted "execution of scripts is disabled", open PowerShell as Administrator and run:
+#    Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+#    Then run this script again (right-click -> Run with PowerShell).
+# 3. If it still fails, set DoH manually: Settings -> Network & Internet -> Wi-Fi/Ethernet -> DNS -> DNS over HTTPS -> On (manual template) -> paste the URL below.
+
 $dohUrl = "${dohUrl}"
-$template = $dohUrl
+Write-Host "DNS Control - Configuring DNS over HTTPS..."
+Write-Host "DoH URL: $dohUrl"
+Write-Host ""
+
 try {
-  Add-DnsClientDohServerAddress -ServerAddress 0.0.0.0 -DohTemplate $template -AllowFallbackToUdp $false -AutoUpgrade $true
-  Write-Host "DNS over HTTPS has been configured. Your device will use our DNS."
+  Add-DnsClientDohServerAddress -ServerAddress 0.0.0.0 -DohTemplate $dohUrl -AllowFallbackToUdp $false -AutoUpgrade $true
+  Write-Host "SUCCESS. DNS over HTTPS is now enabled. Your block/allow rules will apply."
 } catch {
-  Write-Host "If you see an error, you may need to set DoH manually in Settings -> Network -> DNS, and use: $dohUrl"
+  Write-Host "Could not set DoH automatically. Set it manually:"
+  Write-Host "  Settings -> Network & Internet -> your connection -> DNS"
+  Write-Host "  Turn on DNS over HTTPS and use this URL: $dohUrl"
+  Write-Host ""
+  Write-Host "Or run this script as Administrator: open PowerShell as admin, cd to the folder where you saved this file, then run: .\\dns-control-setup.ps1"
 }
 `;
     res.setHeader('Content-Type', 'application/x-powershell');
@@ -58,14 +71,29 @@ try {
   if (os === 'linux') {
     const script = `#!/bin/sh
 # DNS Control - Linux setup
-# Run with: sudo sh dns-control-setup.sh
-# Your DoH URL (use this in systemd-resolved or your DNS manager):
+# Run: chmod +x dns-control-setup.sh   then   ./dns-control-setup.sh
+
 DOH_URL="${dohUrl}"
-echo "DoH URL: $DOH_URL"
+echo "=============================================="
+echo "  DNS Control - Your DoH URL (copy this):"
+echo "=============================================="
 echo ""
-echo "To use our DNS on Linux, configure your system to use DNS over HTTPS."
-echo "With systemd-resolved: add the URL to /etc/systemd/resolved.conf or use a DoH stub like dnscrypt-proxy."
-echo "Alternatively, install our browser extension for browser-only filtering."
+echo "$DOH_URL"
+echo ""
+echo "=============================================="
+echo "  EASIEST: Use in your browser (browser-only)"
+echo "=============================================="
+echo ""
+echo "Chrome: Settings -> Privacy and security -> Security -> Use secure DNS -> With: paste the URL above"
+echo "Firefox: Settings -> Network Settings -> Enable DNS over HTTPS -> Custom -> paste the URL above"
+echo ""
+echo "=============================================="
+echo "  Full system (optional)"
+echo "=============================================="
+echo "Install a DoH-capable stub (e.g. dnscrypt-proxy) and set its DoH URL to the one above."
+echo "Or use systemd-resolved with a DoH template if your distribution supports it."
+echo ""
+echo "Dashboard: ${base}/dashboard"
 `;
     res.setHeader('Content-Type', 'application/x-sh');
     res.setHeader('Content-Disposition', 'attachment; filename="dns-control-setup.sh"');
