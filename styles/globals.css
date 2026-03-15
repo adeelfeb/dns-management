@@ -220,6 +220,14 @@ a:hover:not(nav a) {
 .rule-type { font-size: 0.85rem; color: #64748b; }
 .btn-delete { padding: 0.25rem 0.5rem; cursor: pointer; color: #64748b; background: transparent; border: 1px solid #e2e8f0; border-radius: 0.25rem; }
 .btn-close { margin-top: 0.5rem; padding: 0.25rem 0.5rem; cursor: pointer; }
+.block-log-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(231, 229, 228, 0.8); }
+.block-log-title { font-size: 1.1rem; font-weight: 600; color: #1c1917; margin: 0 0 0.35rem 0; }
+.block-log-intro { font-size: 0.9rem; color: #57534e; margin: 0 0 0.75rem 0; }
+.block-log-loading, .block-log-empty { font-size: 0.9rem; color: #78716c; margin: 0; }
+.block-log-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; max-height: 16rem; overflow-y: auto; background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 0.5rem; padding: 0.5rem; }
+.block-log-item { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.4rem 0.5rem; font-size: 0.9rem; border-radius: 0.25rem; }
+.block-log-domain { font-family: monospace; color: #1c1917; }
+.block-log-time { font-size: 0.8rem; color: #78716c; flex-shrink: 0; }
 
 /* Dashboard page section layout */
 .dashboard-page .section { display: grid; gap: 1rem; min-height: 100%; margin: 0; padding: 0; }

@@ -32,6 +32,18 @@ export default function HelpPanel() {
         <p>If the downloaded file does not work on your OS version, you can configure DNS manually: open your system or Wi‑Fi settings, find DNS, and enter the DoH URL shown for your device in the <strong>Devices</strong> section.</p>
       </div>
 
+      <div className="help-setup-card">
+        <h3>How DNS retrieval works</h3>
+        <p>Once your device or browser uses your DoH URL as its DNS server:</p>
+        <ol className="help-numbered-list">
+          <li>When you open a website, the system sends a DNS query to our server (your DoH URL).</li>
+          <li>We look up your block/allow rules for that device. If the domain is <strong>blocked</strong>, we return no answer (the site won’t load).</li>
+          <li>If it’s not blocked, we forward the query to an upstream DNS and return the result so the site loads.</li>
+          <li>Blocked requests appear under <strong>Block / Allow list</strong> → <strong>Recently blocked (live)</strong> so you can see what was blocked.</li>
+        </ol>
+        <p>If you open your DoH URL in a browser, you’ll see a short explanation and a “Copy” button—that’s normal. The URL is meant to be set in your system or browser DNS settings, not opened like a normal page.</p>
+      </div>
+
       <p className="help-home-link">
         <Link href="/#how-it-works">How it works</Link> (home page)
       </p>
@@ -47,6 +59,8 @@ export default function HelpPanel() {
         .help-setup-card p:last-of-type { margin-bottom: 0; }
         .help-platform-list { margin: 0.5rem 0 0 1.25rem; padding: 0; color: #475569; font-size: 0.95rem; line-height: 1.7; }
         .help-platform-list li { margin-bottom: 0.35rem; }
+        .help-numbered-list { margin: 0.5rem 0 0 1.25rem; padding: 0; color: #475569; font-size: 0.95rem; line-height: 1.7; }
+        .help-numbered-list li { margin-bottom: 0.5rem; }
         .help-platform-list code { background: #e2e8f0; padding: 0.1rem 0.35rem; border-radius: 0.25rem; font-size: 0.85em; }
         .help-manual { background: #fffbeb; border: 1px solid #fde68a; border-radius: 0.75rem; padding: 1rem; }
         .help-manual h3 { font-size: 1rem; font-weight: 600; color: #92400e; margin: 0 0 0.35rem 0; }

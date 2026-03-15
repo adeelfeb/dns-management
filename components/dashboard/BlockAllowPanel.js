@@ -18,6 +18,8 @@ export default function BlockAllowPanel({ user }) {
   const [newAction, setNewAction] = useState('block');
   const [newType, setNewType] = useState('exact');
   const [addLoading, setAddLoading] = useState(false);
+  const [blockLog, setBlockLog] = useState([]);
+  const [blockLogLoading, setBlockLogLoading] = useState(false);
 
   const fetchDevices = useCallback(async () => {
     try {
@@ -64,9 +66,34 @@ export default function BlockAllowPanel({ user }) {
     fetchDevices();
   }, [fetchDevices]);
 
+  const fetchBlockLog = useCallback(async () => {
+    if (!selectedDeviceId) {
+      setBlockLog([]);
+      return;
+    }
+    setBlockLogLoading(true);
+    try {
+      const res = await fetch(`/api/devices/${selectedDeviceId}/block-log?limit=50`, {
+        headers: getAuthHeaders(),
+        credentials: 'include',
+      });
+      const data = await safeParseJsonResponse(res).catch(() => ({}));
+      if (!res.ok) setBlockLog([]);
+      else setBlockLog(data?.data?.logs || []);
+    } catch {
+      setBlockLog([]);
+    } finally {
+      setBlockLogLoading(false);
+    }
+  }, [selectedDeviceId]);
+
   useEffect(() => {
     fetchRules();
   }, [fetchRules]);
+
+  useEffect(() => {
+    fetchBlockLog();
+  }, [fetchBlockLog]);
 
   const handleAddRule = async (e) => {
     e.preventDefault();
@@ -183,6 +210,27 @@ export default function BlockAllowPanel({ user }) {
                 </li>
               ))}
             </ul>
+          )}
+
+          {selectedDeviceId && (
+            <div className="block-log-section">
+              <h3 className="block-log-title">Recently blocked (live)</h3>
+              <p className="block-log-intro">Domains that were blocked when this device used our DNS. Add block rules above to block more.</p>
+              {blockLogLoading ? (
+                <p className="block-log-loading">Loading…</p>
+              ) : blockLog.length === 0 ? (
+                <p className="block-log-empty">No blocked requests yet. Once this device uses your DoH URL and hits a blocked domain, it will appear here.</p>
+              ) : (
+                <ul className="block-log-list">
+                  {blockLog.map((entry) => (
+                    <li key={entry._id} className="block-log-item">
+                      <span className="block-log-domain">{entry.domain}</span>
+                      <span className="block-log-time">{entry.createdAt ? new Date(entry.createdAt).toLocaleString() : ''}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           )}
         </>
       )}
