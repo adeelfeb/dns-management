@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "title": "Privacybeleid | DNS Control",
+    "description": "Privacybeleid voor DNS Control. Hoe we omgaan met je gegevens wanneer je onze website gebruikt.",
+    "keywords": "privacybeleid, DNS Control, gegevensbescherming, websitegebruik",
+    "ogTitle": "Privacybeleid | DNS Control"
+  },
+  "lastUpdated": "Laatst bijgewerkt: februari 2025",
+  "heading": "Privacybeleid",
+  "sections": {
+    "intro": {
+      "title": "1. Introductie",
+      "body": "Dit privacybeleid beschrijft hoe DNS Control (\"wij\", \"ons\") omgaat met informatie in verband met je gebruik van deze website. Door onze site te gebruiken, ga je akkoord met de hier beschreven praktijken. Dit beleid is van toepassing op alle diensten die op deze website worden aangeboden, waaronder: het bekijken van de startpagina; het gebruik van het contactformulier; en het gebruik van het dashboard wanneer je een account hebt."
+    },
+    "utilization": {
+      "title": "2. Gebruik van deze website",
+      "body": "Onze website biedt de volgende diensten en functies:",
+      "bullets": {
+        "browsing": "Algemeen browsen: de startpagina en contactpagina zijn te bezoeken zonder account. We volgen of slaan je persoonlijke gegevens niet op voor deze pagina's, behalve wat technisch noodzakelijk is (bijv. serverlogs).",
+        "account": "Account en dashboard: om het dashboard te gebruiken, kun je je registreren en inloggen. We slaan alleen op wat nodig is (bijv. e-mail, accountgegevens)."
+      }
+    },
+    "information": {
+      "title": "3. Informatie die we verzamelen en gebruiken",
+      "body": "We verzamelen minimale informatie die nodig is om de diensten die je gebruikt te laten werken: accountgegevens en profielinformatie bij registratie; inhoud die je indient (contactformulier); en technische gegevens zoals IP-adres of browsertype waar nodig voor beveiliging of werking. We verkopen je persoonlijke gegevens niet. We gebruiken deze informatie alleen om onze website en diensten te leveren, onderhouden en verbeteren."
+    },
+    "cookies": {
+      "title": "4. Cookies en vergelijkbare technologieën",
+      "body": "We kunnen cookies of vergelijkbare technologieën gebruiken voor essentiële werking van de site (bijv. ingelogd blijven, voorkeuren). We gebruiken geen cookies voor reclame of tracking door derden, behalve wat nodig is om de website te laten functioneren."
+    },
+    "security": {
+      "title": "5. Gegevensbeveiliging en -bewaring",
+      "body": "We nemen redelijke maatregelen om je gegevens te beschermen. Je accountgegevens worden veilig opgeslagen en niet gedeeld met derden voor marketing. We bewaren gegevens alleen zolang nodig om de diensten te leveren of zoals wettelijk verplicht."
+    },
+    "rights": {
+      "title": "6. Je rechten",
+      "body": "Je kunt waar van toepassing toegang tot, correctie of verwijdering van je persoonlijke gegevens aanvragen. Voor accountgerelateerde verzoeken: gebruik het contactformulier of de opties in je dashboard waar beschikbaar."
+    },
+    "contact": {
+      "title": "7. Contact",
+      "body": "Voor vragen over dit privacybeleid of je gegevens: gebruik onze contactpagina."
+    }
+  },
+  "backToHome": "← Terug naar home"
+}

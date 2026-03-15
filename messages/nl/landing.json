@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "title": "DNS Control | Blokkeer of sta websites per apparaat toe",
+    "description": "Beheer DNS voor je apparaten. Blokkeer of sta websites per apparaat toe. Gebruik onze extensie of download een setupbestand—beheer alles vanuit één dashboard.",
+    "keywords": "DNS, DNS-beheer, websites blokkeren, toestaanlijst, per apparaat",
+    "ogTitle": "DNS Control | Blokkeer of sta websites per apparaat toe",
+    "ogDescription": "Beheer DNS voor je apparaten. Blokkeer of sta websites per apparaat toe. Beheer alles vanuit één dashboard.",
+    "ogSiteName": "DNS Control"
+  },
+  "hero": {
+    "title": "Beheer DNS voor je apparaten",
+    "subtitle": "Blokkeer of sta websites per apparaat toe. Laat het DNS van je apparaat via onze server lopen en beheer alles vanuit één dashboard.",
+    "getStarted": "Aan de slag",
+    "logIn": "Inloggen"
+  },
+  "whatIsDns": {
+    "heading": "Wat is DNS-beheer?",
+    "paragraph": "Je apparaat gebruikt DNS om websitenaam (zoals example.com) om te zetten naar adressen. Als je onze DNS gebruikt, loopt dat opzoeken via onze server. We kunnen dan specifieke sites per apparaat blokkeren of toestaan—jij bepaalt wat bereikbaar is op elke telefoon, tablet of computer. Je webverkeer gaat nog steeds rechtstreeks naar het internet; alleen de naamresolutie wordt door ons beheerd.",
+    "learnMore": "Ontdek hoe het werkt →"
+  },
+  "howItWorks": {
+    "heading": "Hoe het werkt",
+    "intro": "Volg deze stappen om DNS-beheer op je apparaten in te stellen. Klik op elke stap voor meer details.",
+    "flowTitle": "Flow: Je apparaat → Onze DoH-server → Regels controleren → Blokkeren of toestaan → Doorsturen naar internet-DNS indien toegestaan.",
+    "flowDetail": "Geblokkeerde domeinen krijgen geen antwoord (NXDOMAIN); toegestane domeinen worden opgelost en je browser verbindt zoals gebruikelijk.",
+    "steps": {
+      "1": {
+        "title": "Registreer en log in op je dashboard",
+        "summary": "Maak een account en ga naar je persoonlijke dashboard.",
+        "details": "Registreer met je e-mail om te beginnen. Eenmaal ingelogd zie je je dashboard waar je apparaten kunt toevoegen, blokkeer-/toestaanlijsten beheren en setuplinks of extensie-instructies krijgt. Geen betaling of kaart nodig om het te proberen."
+      },
+      "2": {
+        "title": "Voeg een apparaat toe en krijg een unieke setup-link (of installeer onze browserextensie)",
+        "summary": "Registreer elk apparaat of elke browser om je regels toe te passen.",
+        "details": "Klik in het dashboard op \"Apparaat toevoegen\" en geef het een naam (bijv. \"Tablet van de kids\" of \"Werk-laptop\"). Je krijgt een unieke DoH (DNS over HTTPS) URL voor dat apparaat. Of installeer onze browserextensie—die gebruikt automatisch je account. Elk apparaat heeft eigen regels zodat je per apparaat andere sites kunt blokkeren."
+      },
+      "3": {
+        "title": "Stel je apparaat of browser in om onze DNS te gebruiken",
+        "summary": "Eenmalige setup of gebruik de extensie—geen gedoe daarna.",
+        "details": "Voor volledige apparaatcontrole: download het setupbestand voor je platform (Windows, Mac, Linux, iOS, Android) vanuit het dashboard en voer het uit of open het. Je systeem gebruikt dan onze DNS. Alleen browser: de extensie regelt alles—installeer en klaar. Geen systeeminstellingen om te wijzigen."
+      },
+      "4": {
+        "title": "Beheer je blokkeer-/toestaanlijst in het dashboard—per apparaat",
+        "summary": "Voeg domeinen toe om te blokkeren of toe te staan; wijzigingen zijn snel actief.",
+        "details": "Selecteer in het dashboard een apparaat en voeg domeinen toe om te blokkeren (bijv. sociale media, reclame) of toe te staan (whitelist). Je kunt blokkeer- en toestaanregels combineren. Wijzigingen zijn binnen seconden actief. Je webverkeer gaat nog steeds rechtstreeks naar het internet; alleen de DNS-opzoekactie loopt via onze server, dus we zien nooit welke pagina's je bezoekt."
+      }
+    }
+  },
+  "twoWays": {
+    "heading": "Twee manieren om DNS-beheer in te schakelen",
+    "browserExtension": {
+      "title": "1. Browserextensie",
+      "description": "Installeer onze extensie in je browser. Eén klik—geen systeeminstellingen. Filtering geldt alleen voor die browser.",
+      "cta": "Na registratie: haal de extensie op in het dashboard →"
+    },
+    "setupFile": {
+      "title": "2. Setupbestand downloaden (volledig apparaat)",
+      "description": "Download één bestand voor je platform (Windows, Mac, Linux, iOS, Android). Open of voer uit—het systeem configureert zichzelf. Het hele apparaat gebruikt onze DNS.",
+      "cta": "Na registratie: voeg een apparaat toe en download het setupbestand →"
+    }
+  },
+  "cta": {
+    "tagline": "Gebruik DNS-beheer op al je apparaten.",
+    "signUp": "Registreren",
+    "logIn": "Inloggen"
+  }
+}

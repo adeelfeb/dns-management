@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const path = require('path');
+const createNextIntlPlugin = require('next-intl/plugin');
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.js');
 
 const nextConfig = {
   reactStrictMode: true,
@@ -127,5 +130,5 @@ const nextConfig = {
   compress: true, // Enable gzip compression
 }
 
-module.exports = nextConfig
+module.exports = withNextIntl(nextConfig);
 

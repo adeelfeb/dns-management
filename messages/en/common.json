@@ -1,0 +1,31 @@
+{
+  "siteName": "DNS Control",
+  "nav": {
+    "home": "Home",
+    "howItWorks": "How it works",
+    "logIn": "Log in",
+    "signUp": "Sign up",
+    "login": "Login",
+    "dashboard": "Dashboard",
+    "privacy": "Privacy",
+    "privacyPolicy": "Privacy Policy",
+    "contact": "Contact",
+    "backToHome": "Back to Home"
+  },
+  "footer": {
+    "siteName": "DNS Control",
+    "allRightsReserved": "All rights reserved."
+  },
+  "aria": {
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "toggleSidebar": "Toggle sidebar"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "nl": "Nederlands"
+  }
+}

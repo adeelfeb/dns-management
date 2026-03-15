@@ -1,0 +1,31 @@
+{
+  "siteName": "DNS Control",
+  "nav": {
+    "home": "Home",
+    "howItWorks": "Hoe het werkt",
+    "logIn": "Inloggen",
+    "signUp": "Registreren",
+    "login": "Inloggen",
+    "dashboard": "Dashboard",
+    "privacy": "Privacy",
+    "privacyPolicy": "Privacybeleid",
+    "contact": "Contact",
+    "backToHome": "Terug naar home"
+  },
+  "footer": {
+    "siteName": "DNS Control",
+    "allRightsReserved": "Alle rechten voorbehouden."
+  },
+  "aria": {
+    "openMenu": "Menu openen",
+    "closeMenu": "Menu sluiten",
+    "showPassword": "Wachtwoord tonen",
+    "hidePassword": "Wachtwoord verbergen",
+    "toggleSidebar": "Zijbalk openen/sluiten"
+  },
+  "language": {
+    "label": "Taal",
+    "en": "English",
+    "nl": "Nederlands"
+  }
+}

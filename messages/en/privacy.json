@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "title": "Privacy Policy | DNS Control",
+    "description": "Privacy policy for DNS Control. How we handle your data when you use our website.",
+    "keywords": "privacy policy, DNS Control, data protection, website usage",
+    "ogTitle": "Privacy Policy | DNS Control"
+  },
+  "lastUpdated": "Last updated: February 2025",
+  "heading": "Privacy Policy",
+  "sections": {
+    "intro": {
+      "title": "1. Introduction",
+      "body": "This Privacy Policy describes how DNS Control (\"we\", \"our\", or \"us\") handles information in connection with your use of this website. By using our site, you agree to the practices described here. This policy applies to all services offered on this website, including: browsing the home page; using the contact form; and using the dashboard when you have an account."
+    },
+    "utilization": {
+      "title": "2. Utilization of This Website",
+      "body": "Our website provides the following services and features:",
+      "bullets": {
+        "browsing": "General browsing: Home and Contact pages can be visited without creating an account. We do not track or store your personal information for these pages beyond what is technically necessary (e.g., server logs).",
+        "account": "Account & dashboard: To use the dashboard, you may sign up and log in. We store only what is needed (e.g., email, account-related data)."
+      }
+    },
+    "information": {
+      "title": "3. Information We Collect and Use",
+      "body": "We collect minimal information necessary to operate the services you use: account credentials and profile information when you register; content you submit (contact form); and technical data such as IP address or browser type where required for security or operation. We do not sell your personal information. We use this information only to provide, maintain, and improve our website and services."
+    },
+    "cookies": {
+      "title": "4. Cookies and Similar Technologies",
+      "body": "We may use cookies or similar technologies for essential site operation (e.g., keeping you logged in, preferences). We do not use cookies for third-party advertising or tracking beyond what is needed for the website to function."
+    },
+    "security": {
+      "title": "5. Data Security and Retention",
+      "body": "We take reasonable measures to protect your data. Your account information is stored securely and is not shared with third parties for marketing. We retain data only as long as necessary to provide the services or as required by law."
+    },
+    "rights": {
+      "title": "6. Your Rights",
+      "body": "You may request access to, correction of, or deletion of your personal data where applicable. For account-related requests, use the contact form or the options in your dashboard where available."
+    },
+    "contact": {
+      "title": "7. Contact",
+      "body": "For questions about this Privacy Policy or your data, use our Contact page."
+    }
+  },
+  "backToHome": "← Back to Home"
+}

@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "title": "DNS Control | Block or allow websites per device",
+    "description": "Control DNS for your devices. Block or allow websites per device. Use our extension or download a setup file—manage everything from one dashboard.",
+    "keywords": "DNS, DNS control, block websites, allow list, per device",
+    "ogTitle": "DNS Control | Block or allow websites per device",
+    "ogDescription": "Control DNS for your devices. Block or allow websites per device. Manage everything from one dashboard.",
+    "ogSiteName": "DNS Control"
+  },
+  "hero": {
+    "title": "Control DNS for your devices",
+    "subtitle": "Block or allow websites per device. Route your device's DNS through our server and manage everything from one dashboard.",
+    "getStarted": "Get started",
+    "logIn": "Log in"
+  },
+  "whatIsDns": {
+    "heading": "What is DNS control?",
+    "paragraph": "Your device uses DNS to turn website names (like example.com) into addresses. When you use our DNS, that lookup goes through our server. We can then block or allow specific sites per device—so you decide what is reachable on each phone, tablet, or computer. Your web traffic still goes directly to the internet; only the name resolution is managed by us.",
+    "learnMore": "Learn how it works →"
+  },
+  "howItWorks": {
+    "heading": "How it works",
+    "intro": "Follow these steps to get DNS control on your devices. Click each step for more details.",
+    "flowTitle": "Flow: Your device → Our DoH server → Check rules → Block or allow → Forward to internet DNS if allowed.",
+    "flowDetail": "Blocked domains get no answer (NXDOMAIN); allowed domains are resolved and your browser connects as usual.",
+    "steps": {
+      "1": {
+        "title": "Sign up and log in to your dashboard",
+        "summary": "Create an account and access your personal dashboard.",
+        "details": "Sign up with your email to get started. Once logged in, you'll see your dashboard where you can add devices, manage block/allow lists, and get setup links or extension instructions. No payment or card required to try it."
+      },
+      "2": {
+        "title": "Add a device and get a unique setup link (or install our browser extension)",
+        "summary": "Register each device or browser to apply your rules.",
+        "details": "In the dashboard, click \"Add device\" and give it a name (e.g. \"Kids' tablet\" or \"Work laptop\"). You'll get a unique DoH (DNS over HTTPS) URL for that device. Alternatively, install our browser extension—it will use your account automatically. Each device has its own rules so you can block different sites per device."
+      },
+      "3": {
+        "title": "Configure your device or browser to use our DNS",
+        "summary": "One-time setup or use the extension—no ongoing hassle.",
+        "details": "For full-device control: download the setup file for your platform (Windows, Mac, Linux, iOS, Android) from the dashboard and run or open it. Your system will start using our DNS. For browser-only: the extension handles everything—just install and you're done. No system settings to change."
+      },
+      "4": {
+        "title": "Manage your block/allow list in the dashboard—per device",
+        "summary": "Add domains to block or allow; changes apply quickly.",
+        "details": "In the dashboard, select a device and add domains to block (e.g. social media, ads) or to allow (whitelist). You can mix block and allow rules. Changes take effect within seconds. Your web traffic still goes directly to the internet; only the DNS lookup is routed through our server, so we never see which pages you visit."
+      }
+    }
+  },
+  "twoWays": {
+    "heading": "Two ways to enable DNS control",
+    "browserExtension": {
+      "title": "1. Browser extension",
+      "description": "Install our extension in your browser. One click—no system settings. Filtering applies to that browser only.",
+      "cta": "After sign up, get the extension from the dashboard →"
+    },
+    "setupFile": {
+      "title": "2. Download setup file (full device)",
+      "description": "Download one file for your platform (Windows, Mac, Linux, iOS, Android). Open or run it—the system configures itself. Whole device uses our DNS.",
+      "cta": "After sign up, add a device and download the setup file →"
+    }
+  },
+  "cta": {
+    "tagline": "Use DNS control on all your devices.",
+    "signUp": "Sign up",
+    "logIn": "Log in"
+  }
+}
