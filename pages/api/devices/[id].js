@@ -54,6 +54,28 @@ export default async function handler(req, res) {
         return jsonError(res, 500, 'Failed to update device', err.message);
       }
     }
+    case 'PATCH': {
+      try {
+        const user = await authMiddleware(req, res);
+        if (!user) return;
+        const device = await Device.findById(id);
+        if (!device) return jsonError(res, 404, 'Device not found');
+        const ownDevice = device.user.toString() === user._id.toString();
+        if (!ownDevice && !roleMiddleware(['admin', 'superadmin', 'developer'])(req, res)) return;
+        const { blockAdultContent } = req.body || {};
+        if (typeof blockAdultContent === 'boolean') {
+          device.blockAdultContent = blockAdultContent;
+        }
+        await device.save();
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+        const dohUrl = `${baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`}/api/dns-query?device=${device.token}`;
+        return jsonSuccess(res, 200, 'Device updated', {
+          device: { ...device.toObject(), dohUrl },
+        });
+      } catch (err) {
+        return jsonError(res, 500, 'Failed to update device', err.message);
+      }
+    }
     case 'DELETE': {
       try {
         const user = await authMiddleware(req, res);
@@ -70,7 +92,7 @@ export default async function handler(req, res) {
       }
     }
     default: {
-      res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
+      res.setHeader('Allow', ['GET', 'PUT', 'PATCH', 'DELETE']);
       return jsonError(res, 405, `Method ${method} not allowed`);
     }
   }

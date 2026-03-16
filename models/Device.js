@@ -8,6 +8,7 @@ const DeviceSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     platform: { type: String, enum: PLATFORMS, required: true },
     token: { type: String, required: true, unique: true, index: true },
+    blockAdultContent: { type: Boolean, default: false, index: true },
   },
   {
     timestamps: true,

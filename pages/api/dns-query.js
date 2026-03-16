@@ -4,6 +4,7 @@ import Device from '../../models/Device';
 import DnsRule from '../../models/DnsRule';
 import DnsBlockLog from '../../models/DnsBlockLog';
 import { applyCors } from '../../utils';
+import adultDomains from '../../data/adultDomains.sample.json';
 
 const UPSTREAM_DOH = 'https://cloudflare-dns.com/dns-query';
 
@@ -231,6 +232,10 @@ export default async function handler(req, res) {
   ]);
   const allRules = [...deviceRules, ...userRules];
 
+  const normalizedAdult = Array.isArray(adultDomains)
+    ? adultDomains.map((d) => String(d).toLowerCase().trim()).filter(Boolean)
+    : [];
+
   let shouldBlock = false;
   for (const rule of allRules) {
     if (rule.action !== 'block') continue;
@@ -239,6 +244,15 @@ export default async function handler(req, res) {
       break;
     }
   }
+  if (!shouldBlock && device.blockAdultContent && normalizedAdult.length > 0) {
+    for (const ad of normalizedAdult) {
+      if (domain === ad || domain.endsWith('.' + ad)) {
+        shouldBlock = true;
+        break;
+      }
+    }
+  }
+
   if (!shouldBlock) {
     for (const rule of allRules) {
       if (rule.action !== 'allow') continue;

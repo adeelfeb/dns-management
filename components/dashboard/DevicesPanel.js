@@ -18,6 +18,24 @@ export default function DevicesPanel({ user }) {
   const [addPlatform, setAddPlatform] = useState('windows');
   const [addLoading, setAddLoading] = useState(false);
   const [createdDevice, setCreatedDevice] = useState(null);
+  const [updatingDeviceId, setUpdatingDeviceId] = useState(null);
+
+  const platformLabel = (platform) => {
+    switch (platform) {
+      case 'windows':
+        return 'Windows';
+      case 'linux':
+        return 'Linux';
+      case 'android':
+        return 'Android';
+      case 'ios':
+        return 'iOS';
+      case 'mac':
+        return 'macOS';
+      default:
+        return platform;
+    }
+  };
 
   const fetchDevices = useCallback(async () => {
     setLoading(true);
@@ -85,6 +103,28 @@ export default function DevicesPanel({ user }) {
     }
   };
 
+  const handleToggleAdultBlock = async (deviceId, currentValue) => {
+    setUpdatingDeviceId(deviceId);
+    setMessage(null);
+    try {
+      const res = await fetch(`/api/devices/${deviceId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+        credentials: 'include',
+        body: JSON.stringify({ blockAdultContent: !currentValue }),
+      });
+      const data = await safeParseJsonResponse(res).catch(() => ({}));
+      if (!res.ok) throw new Error(data?.message || 'Failed to update device');
+      await fetchDevices();
+      setMessage({ type: 'success', text: !currentValue ? 'Adult content blocked for this device' : 'Adult content allowed for this device' });
+      setTimeout(() => setMessage(null), 2000);
+    } catch (e) {
+      setMessage({ type: 'error', text: e.message || 'Failed to update device' });
+    } finally {
+      setUpdatingDeviceId(null);
+    }
+  };
+
   const copyDohUrl = (url) => {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       navigator.clipboard.writeText(url);
@@ -110,6 +150,9 @@ export default function DevicesPanel({ user }) {
       )}
       <p className="devices-intro">
         Add a device to get a unique setup link. Then use the extension or download the setup file for your platform.
+      </p>
+      <p className="devices-intro-secondary">
+        Need help? See setup steps for each device type on the <a href="/#setup-by-device">home page</a>.
       </p>
       <div className="devices-actions">
         <button type="button" className="btn btn-primary" onClick={() => setAddOpen(true)}>
@@ -138,8 +181,8 @@ export default function DevicesPanel({ user }) {
             </select>
           </label>
           <div className="form-actions">
-            <button type="button" onClick={() => setAddOpen(false)}>Cancel</button>
-            <button type="submit" disabled={addLoading || !addName.trim()}>
+            <button type="button" className="btn btn-secondary" onClick={() => setAddOpen(false)}>Cancel</button>
+            <button type="submit" className="btn btn-primary" disabled={addLoading || !addName.trim()}>
               {addLoading ? 'Adding…' : 'Add'}
             </button>
           </div>
@@ -154,9 +197,21 @@ export default function DevicesPanel({ user }) {
             <code className="doh-url">{createdDevice.dohUrl}</code>
             <button type="button" onClick={() => copyDohUrl(createdDevice.dohUrl)}>Copy</button>
           </div>
-          <p className="devices-download-hint">
-            Download setup file: <a href={`/api/setup-file?device=${createdDevice.token}&os=${createdDevice.platform}`} download>Get setup file for {createdDevice.platform}</a>
-          </p>
+          <div className="devices-setup-buttons">
+            <span className="devices-download-hint-label">Download setup file:</span>
+            <div className="devices-setup-buttons-row">
+              {PLATFORMS.map((os) => (
+                <a
+                  key={os}
+                  href={`/api/setup-file?device=${createdDevice.token}&os=${os}`}
+                  className="btn btn-ghost"
+                  download
+                >
+                  {platformLabel(os)}
+                </a>
+              ))}
+            </div>
+          </div>
           <button type="button" className="btn-close" onClick={() => setCreatedDevice(null)}>Dismiss</button>
         </div>
       )}
@@ -177,6 +232,37 @@ export default function DevicesPanel({ user }) {
             </div>
             <div className="device-meta">
               Added {d.createdAt ? new Date(d.createdAt).toLocaleDateString() : ''}
+            </div>
+            <div className="device-flags">
+              <label className="toggle">
+                <input
+                  type="checkbox"
+                  checked={Boolean(d.blockAdultContent)}
+                  onChange={() => handleToggleAdultBlock(d._id, Boolean(d.blockAdultContent))}
+                  disabled={updatingDeviceId === d._id}
+                />
+                <span className="toggle-label">
+                  Block adult content (porn, explicit sites)
+                </span>
+              </label>
+              {d.blockAdultContent && (
+                <span className="tag tag-teal">Adult content blocked</span>
+              )}
+            </div>
+            <div className="devices-setup-buttons">
+              <span className="devices-download-hint-label">Setup files:</span>
+              <div className="devices-setup-buttons-row">
+                {PLATFORMS.map((os) => (
+                  <a
+                    key={os}
+                    href={`/api/setup-file?device=${d.token}&os=${os}`}
+                    className="btn btn-ghost"
+                    download
+                  >
+                    {platformLabel(os)}
+                  </a>
+                ))}
+              </div>
             </div>
             <button type="button" className="btn-revoke" onClick={() => handleRevoke(d._id)}>Revoke</button>
           </li>
