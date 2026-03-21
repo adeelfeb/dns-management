@@ -5,6 +5,7 @@ import authMiddleware from '../../../middlewares/authMiddleware';
 import roleMiddleware from '../../../middlewares/roleMiddleware';
 import { jsonError, jsonSuccess } from '../../../lib/response';
 import { applyCors } from '../../../utils';
+import { getPublicBaseUrl, buildDohUrl } from '../../../lib/publicAppUrl';
 
 export default async function handler(req, res) {
   const { method, query: { id } } = req;
@@ -21,8 +22,8 @@ export default async function handler(req, res) {
         if (!device) return jsonError(res, 404, 'Device not found');
         const ownDevice = device.user.toString() === user._id.toString();
         if (!ownDevice && !roleMiddleware(['admin', 'superadmin', 'developer'])(req, res)) return;
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-        const dohUrl = `${baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`}/api/dns-query?device=${device.token}`;
+        const base = getPublicBaseUrl(req);
+        const dohUrl = buildDohUrl(base, device.token);
         return jsonSuccess(res, 200, 'Ok', {
           device: { ...device, dohUrl },
         });
@@ -45,8 +46,8 @@ export default async function handler(req, res) {
           if (['windows', 'linux', 'android', 'ios', 'mac'].includes(p)) device.platform = p;
         }
         await device.save();
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-        const dohUrl = `${baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`}/api/dns-query?device=${device.token}`;
+        const base = getPublicBaseUrl(req);
+        const dohUrl = buildDohUrl(base, device.token);
         return jsonSuccess(res, 200, 'Device updated', {
           device: { ...device.toObject(), dohUrl },
         });
@@ -67,8 +68,8 @@ export default async function handler(req, res) {
           device.blockAdultContent = blockAdultContent;
         }
         await device.save();
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-        const dohUrl = `${baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`}/api/dns-query?device=${device.token}`;
+        const base = getPublicBaseUrl(req);
+        const dohUrl = buildDohUrl(base, device.token);
         return jsonSuccess(res, 200, 'Device updated', {
           device: { ...device.toObject(), dohUrl },
         });

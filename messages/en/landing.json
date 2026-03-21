@@ -73,7 +73,7 @@
     },
     "linux": {
       "title": "Linux",
-      "steps": "Option A – Easiest (browser): 1) Download the setup file for Linux from the dashboard and run it (chmod +x dns-control-setup.sh then ./dns-control-setup.sh) to see your DoH URL. 2) In Chrome: Settings → Privacy and security → Security → use secure DNS → With → paste the URL. In Firefox: Settings → Network settings → Enable DNS over HTTPS → Custom → paste the URL. Option B – Full system: Use a DoH stub (e.g. dnscrypt-proxy) or systemd-resolved with your DoH URL from the dashboard."
+      "steps": "Option A – Easiest (browser): 1) Download the Linux setup file from the dashboard and run it (chmod +x dns-control-setup.sh then ./dns-control-setup.sh) to see your DoH URL. 2) Chrome: Settings → Privacy and security → Security → secure DNS → With → paste URL. 3) Firefox (Ubuntu/Linux): Settings → General → Network Settings → Settings… → DNS over HTTPS → Increased or Max Protection (not Default or Off) → Custom provider → paste URL. Option B – Full system: DoH stub (e.g. dnscrypt-proxy) or systemd-resolved with your DoH URL."
     },
     "android": {
       "title": "Android",

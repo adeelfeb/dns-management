@@ -147,7 +147,7 @@ const SECTION_DESCRIPTORS = {
     body: (user) => <OverviewBody user={user} />,
   },
   devices: {
-    subtitle: 'Add a device to get a unique setup link. Then use the extension or download the setup file for your platform.',
+    subtitle: 'Add a device for a personal DNS link. Downloads configure your system; the server applies rules and logs blocks.',
     hideHeader: true,
     body: (user) => <DevicesPanel user={user} />,
   },

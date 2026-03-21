@@ -156,7 +156,7 @@ export default function BlockAllowPanel({ user }) {
         </div>
       )}
       <p className="block-allow-intro">
-        Block or allow websites for each device. Domains listed here are checked when the device uses our DNS.
+        When this device uses your DoH URL in the browser: domains you <strong>block</strong> (or optional adult list) get no DNS answer—sites won’t load. Everything else resolves normally. <strong>Allow</strong> rules override a block for that domain (exceptions).
       </p>
       {devices.length === 0 ? (
         <p className="block-allow-empty">Add a device first in the Devices section.</p>

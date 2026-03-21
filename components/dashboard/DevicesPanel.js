@@ -149,7 +149,7 @@ export default function DevicesPanel({ user }) {
         </div>
       )}
       <p className="devices-intro">
-        Add a device to get a unique setup link. Then use the extension or download the setup file for your platform.
+        Each device gets a <strong>personal DNS link</strong>. When a phone, PC, or browser uses that link, <strong>lookups go to our website</strong>, we apply your block/allow rules (and optional adult blocking), log blocks to your dashboard, then answer or forward the query.
       </p>
       <p className="devices-intro-secondary">
         Need help? See setup steps for each device type on the <a href="/#setup-by-device">home page</a>.
@@ -198,7 +198,7 @@ export default function DevicesPanel({ user }) {
             <button type="button" onClick={() => copyDohUrl(createdDevice.dohUrl)}>Copy</button>
           </div>
           <div className="devices-setup-buttons">
-            <span className="devices-download-hint-label">Download setup file:</span>
+            <span className="devices-download-hint-label">Download setup for your system:</span>
             <div className="devices-setup-buttons-row">
               {PLATFORMS.map((os) => (
                 <a
@@ -210,6 +210,16 @@ export default function DevicesPanel({ user }) {
                   {platformLabel(os)}
                 </a>
               ))}
+            </div>
+            <span className="devices-download-hint-label devices-download-hint-label--secondary">Bundle for Chrome extension:</span>
+            <div className="devices-setup-buttons-row">
+              <a
+                href={`/api/extension-config?device=${createdDevice.token}`}
+                className="btn btn-ghost btn-ghost--emphasis"
+                download
+              >
+                dns-control-config.json
+              </a>
             </div>
           </div>
           <button type="button" className="btn-close" onClick={() => setCreatedDevice(null)}>Dismiss</button>
@@ -262,6 +272,16 @@ export default function DevicesPanel({ user }) {
                     {platformLabel(os)}
                   </a>
                 ))}
+              </div>
+              <span className="devices-download-hint-label devices-download-hint-label--secondary">Extension bundle:</span>
+              <div className="devices-setup-buttons-row">
+                <a
+                  href={`/api/extension-config?device=${d.token}`}
+                  className="btn btn-ghost btn-ghost--emphasis"
+                  download
+                >
+                  dns-control-config.json
+                </a>
               </div>
             </div>
             <button type="button" className="btn-revoke" onClick={() => handleRevoke(d._id)}>Revoke</button>

@@ -151,11 +151,7 @@ export default function HelpPanel() {
         <h2 className="help-hero-title">Connect your devices to DNS Control</h2>
         <p className="help-hero-lead">
           You don’t type a classic “DNS number” here. Instead, each device gets a <strong>personal secure link</strong> (called a
-          DNS-over-HTTPS URL). Your browser or computer uses that link whenever it looks up a website—so your{' '}
-          <a href="#block-allow-list" className="help-inline-a">
-            block and allow lists
-          </a>{' '}
-          can apply.
+          DNS-over-HTTPS URL). Your browser uses it for lookups: only domains on your <strong>block</strong> list (or optional adult filter) are stopped; everything else loads as usual. <strong>Allow</strong> rules undo a block for specific sites.
         </p>
         <a href="#devices" className="help-cta">
           <span className="help-cta-icon" aria-hidden>
@@ -216,7 +212,8 @@ export default function HelpPanel() {
           </a>
         </div>
         <p className="help-doh-intro">
-          These are the exact values to paste into <strong>Secure DNS</strong> / <strong>DNS over HTTPS</strong> settings. Each device can have its own link.
+          Paste into <strong>Secure DNS</strong> / <strong>DNS over HTTPS</strong> (path-style URL, e.g. <code className="help-inline-code">…/api/dns-query/TOKEN</code>).{' '}
+          <strong>http://localhost</strong> may be rejected by Firefox—use Chrome for local tests or an <code>https://</code> URL (tunnel or real deploy). Each device has its own link.
         </p>
         {devicesLoading ? (
           <p className="help-doh-loading">Loading your devices…</p>
@@ -260,16 +257,65 @@ export default function HelpPanel() {
               <span className="help-guide-icon" aria-hidden>
                 <IconFirefox />
               </span>
-              <h4>Firefox</h4>
+              <h4>Firefox (Ubuntu, Linux, desktop)</h4>
             </div>
-            <p className="help-guide-deck">Stays inside Firefox only unless you set DNS elsewhere too.</p>
+            <p className="help-guide-deck">
+              Recent Firefox shows <strong>DNS over HTTPS</strong> with protection levels—not a single “on + custom” toggle. Pick the right level so your DNS Control URL is actually used.
+            </p>
+            <div className="help-firefox-proxy-note">
+              <strong>Only see “Configure Proxy Access to the Internet”?</strong> That is the same window. Proxy options are at the top—<strong>scroll down</strong>.{' '}
+              <strong>DNS over HTTPS</strong> is usually <em>below</em> the proxy section. Leave proxy on <strong>No proxy</strong> unless your network requires one.
+            </div>
+            <div className="help-firefox-invalid-url">
+              <strong>Firefox: “Invalid URL” / can’t find any website?</strong> The DoH link from the dashboard must be{' '}
+              <strong>path-style</strong>: <code className="help-inline-code">…/api/dns-query/YOUR_TOKEN</code> — <strong>not</strong>{' '}
+              <code className="help-inline-code">…?device=…</code>. Firefox adds <code className="help-inline-code">?dns=…</code> to whatever you paste; a second{' '}
+              <code>?</code> breaks it. Open <strong>Devices</strong>, copy the URL again, replace the old value in Firefox Custom DNS, or set{' '}
+              <code className="help-inline-code">network.trr.uri</code> in <code className="help-inline-code">about:config</code> to the new link.
+            </div>
+            <div className="help-firefox-max">
+              <strong>Increased Protection works but Max Protection breaks?</strong> Max is stricter: it usually demands a trusted <strong>HTTPS</strong> DoH URL.
+              <code className="help-inline-code"> http://localhost:3000/…</code> often shows <strong>Provider: Invalid URL</strong> or “trouble finding this site” under Max—that is Firefox’s policy, not a bug in your block list or server logic.
+              Use <strong>Increased Protection</strong> for local HTTP, or run <code className="help-inline-code">npm run dev:https</code>, set{' '}
+              <code className="help-inline-code">NEXT_PUBLIC_APP_URL=https://localhost:3000</code> in <code className="help-inline-code">.env</code>, copy the new DoH URL from Devices (accept Firefox’s certificate warning once), or use a deployed HTTPS site.
+            </div>
             <ol className="help-guide-ol">
-              <li>Copy the link from above or from <a href="#devices">Devices</a>.</li>
-              <li>Menu → <strong>Settings</strong> → <strong>General</strong> → <strong>Network Settings</strong> → <strong>Settings…</strong></li>
-              <li>Turn on <strong>Enable DNS over HTTPS</strong> → <strong>Custom</strong> → paste the link.</li>
+              <li>Copy your DoH link from above or <a href="#devices">Devices</a>.</li>
+              <li>
+                <strong>Settings</strong> → <strong>General</strong> → <strong>Network Settings</strong> → <strong>Settings…</strong> (same dialog as proxy).
+              </li>
+              <li>
+                Scroll past proxy (keep <strong>No proxy</strong> selected unless you know you need a proxy). Find <strong>DNS over HTTPS</strong>.
+              </li>
+              <li>
+                Under <strong>Enable DNS over HTTPS using:</strong> choose <strong>Increased Protection</strong> (recommended) or <strong>Max Protection</strong>—not Default, not Off.
+              </li>
+              <li>
+                Open the provider dropdown → <strong>Custom</strong> → paste your full DNS Control URL. <strong>OK</strong> to close.
+              </li>
+              <li>Reload a page to test.</li>
             </ol>
+            <div className="help-firefox-modes">
+              <p className="help-firefox-modes-title">What each option means (don’t guess)</p>
+              <ul className="help-firefox-modes-list">
+                <li>
+                  <strong>Default Protection</strong> — Firefox decides when to use DoH and which provider. <em>Your custom DNS Control URL is not used.</em> Skip this for our service.
+                </li>
+                <li>
+                  <strong>Increased Protection</strong> — You choose the provider. Pick <strong>Custom</strong> and paste our URL. <strong>Use this for DNS Control.</strong>
+                </li>
+                <li>
+                  <strong>Max Protection</strong> — Always uses secure DNS; may warn before falling back to system DNS. You can still set <strong>Custom</strong> to our URL if offered.
+                </li>
+                <li>
+                  <strong>Off</strong> — Uses your normal resolver only; <em>DNS Control is not active in Firefox.</em>
+                </li>
+              </ul>
+            </div>
             <p className="help-guide-note">
-              <strong>Android:</strong> Menu → Settings → <strong>DNS over HTTPS</strong> → Custom → paste.
+              <strong>Still no DNS section after scrolling?</strong> Try <strong>Settings → Privacy &amp; Security</strong> and search settings for <strong>DNS</strong>—some Firefox versions put <strong>DNS over HTTPS</strong> there instead of inside Network Settings. Last resort: <code className="help-inline-code">about:config</code> → set{' '}
+              <code className="help-inline-code">network.trr.mode</code> to <strong>2</strong> (use DoH with fallback) or <strong>3</strong> (DoH only, stricter) and <code className="help-inline-code">network.trr.uri</code> to your DoH URL (advanced).{' '}
+              <strong>Android Firefox:</strong> Menu → Settings → <strong>DNS over HTTPS</strong> → Increased/Max + Custom if shown, else On + Custom.
             </p>
           </article>
 
@@ -302,11 +348,15 @@ export default function HelpPanel() {
             <p className="help-guide-deck">Uses DNS Control for more than one browser at once (where the file supports it).</p>
             <ol className="help-guide-ol">
               <li>Open <a href="#devices">Devices</a> and pick your device.</li>
-              <li>Click <strong>Windows</strong>, <strong>macOS</strong>, <strong>Linux</strong>, or <strong>iOS</strong> to download the helper file.</li>
-              <li>Open or run the file and follow any prompts (admin OK on Windows, profile install on iOS, etc.).</li>
+              <li>
+                Download the file for your system: <strong>Windows</strong>, <strong>macOS</strong>, <strong>Linux</strong>, <strong>iOS</strong>, or{' '}
+                <strong>Android</strong> (saves <code className="help-inline-code">dns-control-android-setup.html</code>—open it for steps and a Copy button).
+              </li>
+              <li>Optional: download <code className="help-inline-code">dns-control-config.json</code> and import it into the Chrome extension options (pairs every link in one file).</li>
+              <li>Open or run the helper and follow prompts (admin on Windows, profile install on iOS/Mac, etc.).</li>
             </ol>
             <p className="help-guide-note">
-              <strong>Android:</strong> “Private DNS” is a different technology; use Firefox with custom DNS over HTTPS, or an app that supports custom DoH.
+              <strong>Android:</strong> System “Private DNS” cannot use a full HTTPS URL; the HTML guide and Firefox custom DoH send lookups to our server the same way as other platforms.
             </p>
           </article>
         </div>
@@ -322,8 +372,8 @@ export default function HelpPanel() {
         <div className="help-details-body">
           <ul className="help-details-ul">
             <li>
-              The app serves a real DNS-over-HTTPS endpoint at <code className="help-inline-code">/api/dns-query</code> and setup files from{' '}
-              <code className="help-inline-code">/api/setup-file</code>.
+              Endpoints: <code className="help-inline-code">/api/dns-query</code> (resolver), <code className="help-inline-code">/api/setup-file</code> (per-OS helpers),{' '}
+              <code className="help-inline-code">/api/extension-config</code> (JSON bundle for the extension and tooling).
             </li>
             <li>There is no Chrome Web Store install button in this project yet—use browser Secure DNS with your link.</li>
             <li>
@@ -712,6 +762,59 @@ export default function HelpPanel() {
           font-size: 0.82rem;
           color: #64748b;
           line-height: 1.5;
+        }
+        .help-firefox-proxy-note {
+          margin: 0 0 0.75rem 0;
+          padding: 0.65rem 0.8rem;
+          border-radius: 0.55rem;
+          background: #fffbeb;
+          border: 1px solid #fde68a;
+          font-size: 0.85rem;
+          color: #78350f;
+          line-height: 1.5;
+        }
+        .help-firefox-invalid-url {
+          margin: 0 0 0.75rem 0;
+          padding: 0.65rem 0.8rem;
+          border-radius: 0.55rem;
+          background: #ecfdf5;
+          border: 1px solid #99f6e4;
+          font-size: 0.85rem;
+          color: #134e4a;
+          line-height: 1.5;
+        }
+        .help-firefox-max {
+          margin: 0 0 0.75rem 0;
+          padding: 0.65rem 0.8rem;
+          border-radius: 0.55rem;
+          background: #eff6ff;
+          border: 1px solid #bfdbfe;
+          font-size: 0.85rem;
+          color: #1e3a8a;
+          line-height: 1.55;
+        }
+        .help-firefox-modes {
+          margin-top: 0.85rem;
+          padding: 0.75rem 0.9rem;
+          border-radius: 0.65rem;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+        }
+        .help-firefox-modes-title {
+          margin: 0 0 0.45rem 0;
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: #0f172a;
+        }
+        .help-firefox-modes-list {
+          margin: 0;
+          padding-left: 1.1rem;
+          font-size: 0.82rem;
+          color: #475569;
+          line-height: 1.55;
+        }
+        .help-firefox-modes-list li {
+          margin-bottom: 0.4rem;
         }
         .help-details {
           border: 1px solid #e2e8f0;

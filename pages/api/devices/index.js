@@ -6,6 +6,7 @@ import roleMiddleware from '../../../middlewares/roleMiddleware';
 import { jsonError, jsonSuccess } from '../../../lib/response';
 import { applyCors } from '../../../utils';
 import { PLATFORMS } from '../../../models/Device';
+import { getPublicBaseUrl, buildDohUrl } from '../../../lib/publicAppUrl';
 
 function generateToken() {
   return crypto.randomBytes(32).toString('hex');
@@ -28,11 +29,10 @@ export default async function handler(req, res) {
           filter = { user: req.query.userId };
         }
         const devices = await Device.find(filter).sort({ createdAt: -1 }).lean();
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-        const base = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+        const base = getPublicBaseUrl(req);
         const devicesWithUrl = devices.map((d) => ({
           ...d,
-          dohUrl: `${base}/api/dns-query?device=${d.token}`,
+          dohUrl: buildDohUrl(base, d.token),
         }));
         return jsonSuccess(res, 200, 'Ok', { devices: devicesWithUrl });
       } catch (err) {
@@ -57,8 +57,8 @@ export default async function handler(req, res) {
           platform: normalizedPlatform,
           token,
         });
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-        const dohUrl = `${baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`}/api/dns-query?device=${token}`;
+        const base = getPublicBaseUrl(req);
+        const dohUrl = buildDohUrl(base, token);
         return jsonSuccess(res, 201, 'Device created', {
           device: {
             id: device._id,

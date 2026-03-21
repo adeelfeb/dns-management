@@ -1,7 +1,9 @@
-// DNS Control - Browser extension
-// To finish: use chrome.dns or fetch DoH when the user has set a DoH URL in options.
-// For now this is a placeholder; the extension should read the user's DoH URL from
-// chrome.storage.sync (set in options.html) and use it for DNS resolution in the browser.
-chrome.runtime.onInstalled.addListener(() => {
-  console.log('DNS Control extension installed.');
+// DNS Control — background service worker (MV3).
+// DNS resolution is enforced by the browser/OS using the DoH URL from the dashboard.
+// This worker keeps the install hook for future features (e.g. syncing rules).
+
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install' || details.reason === 'update') {
+    console.log('[DNS Control] Extension ready. Import dns-control-config.json in options or paste your DoH URL.');
+  }
 });

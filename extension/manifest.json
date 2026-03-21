@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "DNS Control",
-  "version": "0.1.0",
-  "description": "Use DNS Control to filter DNS for this browser. Add a device in the dashboard and paste your DoH URL, or sign in.",
+  "version": "0.2.0",
+  "description": "Pair with DNS Control: import dns-control-config.json from the dashboard, then use Chrome Secure DNS with your DoH URL. Blocking runs on the server.",
   "permissions": ["storage"],
   "host_permissions": ["<all_urls>", "https://*/*"],
   "background": {

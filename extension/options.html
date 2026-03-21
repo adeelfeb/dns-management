@@ -1,19 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>DNS Control - Options</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DNS Control – Options</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 520px; margin: 1.25rem auto; padding: 0 1rem; color: #1c1917; line-height: 1.5; }
+    h1 { font-size: 1.25rem; margin: 0 0 0.5rem 0; }
+    .lead { color: #57534e; font-size: 0.92rem; margin: 0 0 1rem 0; }
+    label { display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.35rem; }
+    input[type="url"] { width: 100%; box-sizing: border-box; padding: 0.5rem 0.6rem; border-radius: 8px; border: 1px solid #d6d3d1; margin-bottom: 0.75rem; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }
+    button { padding: 0.45rem 0.9rem; border-radius: 8px; border: 1px solid #0d9488; background: #fff; color: #0f766e; font-weight: 600; cursor: pointer; font-size: 0.88rem; }
+    button.primary { background: #0d9488; color: #fff; border-color: #0f766e; }
+    #status { margin-top: 0.75rem; font-size: 0.88rem; color: #57534e; min-height: 1.25rem; }
+    .box { background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; padding: 0.85rem 1rem; margin-top: 1rem; font-size: 0.85rem; color: #44403c; }
+    .box strong { color: #0f766e; }
+    code { font-size: 0.8em; background: #f5f5f4; padding: 0.15em 0.35em; border-radius: 4px; }
+  </style>
 </head>
 <body>
   <h1>DNS Control</h1>
-  <p>Get your DoH URL from the dashboard after adding a device, then paste it below.</p>
-  <label>
-    DoH URL:
-    <input type="url" id="dohUrl" placeholder="https://your-site.com/api/dns-query?device=..." style="width: 100%; max-width: 480px; margin-top: 0.5rem;">
-  </label>
-  <br><br>
-  <button id="save">Save</button>
-  <p id="status" style="margin-top: 1rem; color: #666;"></p>
+  <p class="lead">Your DNS lookups are handled by <strong>this website’s server</strong> when you use the DoH URL below in the browser’s secure DNS settings (or OS setup files from the dashboard).</p>
+
+  <label for="dohUrl">DNS-over-HTTPS (DoH) URL</label>
+  <input type="url" id="dohUrl" placeholder="https://your-site.com/api/dns-query/YOUR_DEVICE_TOKEN" autocomplete="off">
+
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+
+  <div class="row">
+    <button type="button" class="primary" id="save">Save URL</button>
+    <button type="button" id="importBtn">Import dns-control-config.json</button>
+  </div>
+
+  <div class="box">
+    <strong>Setup bundle:</strong> On the dashboard → Devices → download <code>dns-control-config.json</code>. It includes this URL plus links to Windows, Mac, iOS, Linux, and Android helpers. Import the file here to fill the field automatically.
+  </div>
+
+  <p id="status" role="status"></p>
   <script src="options.js"></script>
 </body>
 </html>

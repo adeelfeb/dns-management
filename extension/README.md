@@ -1,17 +1,25 @@
 # DNS Control - Browser Extension
 
-This folder contains the DNS Control browser extension (Chrome). It is part of the same project as the Next.js app.
+Chrome/Edge (Manifest V3) helper for the same Next.js project as the dashboard.
 
-## Status
+## What it does
 
-Placeholder implementation: options page lets users save their DoH URL from the dashboard. Full DNS filtering in the browser would require using the DoH URL for all DNS lookups made by the browser (e.g. via Chrome's proxy or DNS APIs where available).
+DNS blocking and allow rules run **on the website’s server** when the browser (or OS) uses your **DoH URL** (`/api/dns-query/<token>` — path style so Firefox can append `?dns=…`). This extension stores that URL and lets you **import `dns-control-config.json`** from the dashboard (Devices → **dns-control-config.json**), which includes the URL and links to all setup downloads.
 
-## Load in Chrome
+For full effect in Chrome/Edge, set **Settings → Privacy and security → Security → Use secure DNS → With** and paste the same DoH URL.
+
+## Load unpacked
 
 1. Open `chrome://extensions`
-2. Enable "Developer mode"
-3. Click "Load unpacked" and select this `extension` folder
+2. Enable **Developer mode**
+3. **Load unpacked** → select this `extension` folder
 
-## Build / Publish
+## Import config
 
-To publish to the Chrome Web Store, zip the contents of this folder and upload. Ensure the DoH URL in options points to your deployed app (e.g. `https://yourdomain.com/api/dns-query?device=TOKEN`).
+1. Dashboard → **Devices** → download **dns-control-config.json** for your device
+2. Extension → **Details** → **Extension options** (or right-click the extension → Options)
+3. **Import dns-control-config.json** → saves the DoH URL to sync storage
+
+## Publish
+
+Zip the contents of this folder for the Chrome Web Store. Ensure `NEXT_PUBLIC_APP_URL` on the server matches the domain users will use in the DoH URL.
