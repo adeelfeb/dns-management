@@ -157,7 +157,7 @@ const SECTION_DESCRIPTORS = {
     body: (user) => <BlockAllowPanel user={user} />,
   },
   help: {
-    subtitle: 'Two ways to enable DNS control: install the browser extension (browser only) or download the setup file for your platform (full device).',
+    subtitle: 'Start on Devices for your personal link, then follow the three steps below—or open Help anytime.',
     hideHeader: true,
     body: () => <HelpPanel />,
   },
@@ -438,7 +438,7 @@ export default function Dashboard({ user }) {
         {deviceCountForPrompt === 0 && !dnsPromptDismissed && (
           <div className="dns-prompt-banner">
             <p className="dns-prompt-title">Use our DNS for this device?</p>
-            <p className="dns-prompt-text">Get setup in one step: use the browser extension (this browser only) or download a setup file (whole device).</p>
+            <p className="dns-prompt-text">Copy your secure DNS link from Devices, paste it into Firefox or Chrome secure DNS, or download a setup file for your whole device.</p>
             <div className="dns-prompt-actions">
               <a href="#devices" className="dns-prompt-btn dns-prompt-btn--primary">Get setup</a>
               <button type="button" className="dns-prompt-dismiss" onClick={() => setDnsPromptDismissed(true)}>Dismiss</button>
