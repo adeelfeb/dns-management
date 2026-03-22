@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-// AG Grid only used on dashboard (UserOverviewTable); load here so other pages stay light
 import 'ag-grid-community/styles/ag-grid.min.css';
 import 'ag-grid-community/styles/ag-theme-quartz.min.css';
 import { safeParseJsonResponse } from '../utils/safeJsonResponse';
@@ -13,6 +12,8 @@ import PrivacyPanel from '../components/dashboard/PrivacyPanel';
 import DevicesPanel from '../components/dashboard/DevicesPanel';
 import BlockAllowPanel from '../components/dashboard/BlockAllowPanel';
 import { getUserFromRequest } from '../lib/auth';
+import { DashboardLocaleProvider, useDashboardLocale } from '../context/DashboardLocaleContext';
+import { normalizeUserLocale } from '../lib/userLocale';
 
 function serializeUser(user) {
   if (!user) return null;
@@ -23,87 +24,58 @@ function serializeUser(user) {
     role: user.role || 'base_user',
     roleRef: user.roleRef?.toString?.() || user.roleRef || null,
     createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : null,
+    preferences: {
+      locale: normalizeUserLocale(user.preferences?.locale),
+    },
   };
 }
 
 export async function getServerSideProps(context) {
   try {
-    const { req, resolvedUrl } = context;
-    const user = await getUserFromRequest(req);
+    const user = await getUserFromRequest(context.req);
 
     if (!user) {
-      // Don't include hash in redirect - it causes issues
-      // The login page will handle redirecting back after auth
-      return { redirect: { destination: '/login', permanent: false } };
+      return { redirect: { destination: '/auth', permanent: false } };
     }
 
     const serializedUser = serializeUser(user);
     return { props: { user: serializedUser } };
   } catch (error) {
-    // If auth fails (e.g., DB not available), redirect to login
-    // This allows the app to work even without backend
     console.error('[Dashboard] Error in getServerSideProps:', error.message);
-    return { redirect: { destination: '/login', permanent: false } };
+    return { redirect: { destination: '/auth', permanent: false } };
   }
 }
 
-const NAVIGATION_BY_ROLE = {
-  superadmin: [
-    { key: 'overview', label: 'Overview' },
-    { key: 'devices', label: 'Devices' },
-    { key: 'block-allow-list', label: 'Block / Allow list' },
-    { key: 'user-management', label: 'User Management' },
-    { key: 'help', label: 'Help' },
-    { key: 'privacy', label: 'Privacy' },
-  ],
-  developer: [
-    { key: 'overview', label: 'Overview' },
-    { key: 'devices', label: 'Devices' },
-    { key: 'block-allow-list', label: 'Block / Allow list' },
-    { key: 'user-management', label: 'User Management' },
-    { key: 'help', label: 'Help' },
-    { key: 'privacy', label: 'Privacy' },
-  ],
-  admin: [
-    { key: 'overview', label: 'Overview' },
-    { key: 'devices', label: 'Devices' },
-    { key: 'block-allow-list', label: 'Block / Allow list' },
-    { key: 'user-management', label: 'User Management' },
-    { key: 'help', label: 'Help' },
-    { key: 'privacy', label: 'Privacy' },
-  ],
-  hr: [
-    { key: 'overview', label: 'Overview' },
-    { key: 'devices', label: 'Devices' },
-    { key: 'block-allow-list', label: 'Block / Allow list' },
-    { key: 'help', label: 'Help' },
-    { key: 'privacy', label: 'Privacy' },
-  ],
-  hr_admin: [
-    { key: 'overview', label: 'Overview' },
-    { key: 'devices', label: 'Devices' },
-    { key: 'block-allow-list', label: 'Block / Allow list' },
-    { key: 'help', label: 'Help' },
-    { key: 'privacy', label: 'Privacy' },
-  ],
-  base_user: [
-    { key: 'overview', label: 'Overview' },
-    { key: 'devices', label: 'Devices' },
-    { key: 'block-allow-list', label: 'Block / Allow list' },
-    { key: 'help', label: 'Help' },
-    { key: 'privacy', label: 'Privacy' },
-  ],
+const NAV_KEYS_BY_ROLE = {
+  superadmin: ['overview', 'devices', 'block-allow-list', 'user-management', 'help', 'privacy'],
+  developer: ['overview', 'devices', 'block-allow-list', 'user-management', 'help', 'privacy'],
+  admin: ['overview', 'devices', 'block-allow-list', 'user-management', 'help', 'privacy'],
+  hr: ['overview', 'devices', 'block-allow-list', 'help', 'privacy'],
+  hr_admin: ['overview', 'devices', 'block-allow-list', 'help', 'privacy'],
+  base_user: ['overview', 'devices', 'block-allow-list', 'help', 'privacy'],
 };
 
-const FALLBACK_NAV = [
-  { key: 'overview', label: 'Overview' },
-  { key: 'devices', label: 'Devices' },
-  { key: 'block-allow-list', label: 'Block / Allow list' },
-  { key: 'help', label: 'Help' },
-  { key: 'privacy', label: 'Privacy' },
-];
+const FALLBACK_NAV_KEYS = ['overview', 'devices', 'block-allow-list', 'help', 'privacy'];
 
-function OverviewBody({ user }) {
+const NAV_LABEL_KEY = {
+  overview: 'nav.overview',
+  devices: 'nav.devices',
+  'block-allow-list': 'nav.blockAllowList',
+  'user-management': 'nav.userManagement',
+  help: 'nav.help',
+  privacy: 'nav.privacy',
+};
+
+function buildNavItems(t, role) {
+  const normalized = (role || '').toLowerCase();
+  const keys = NAV_KEYS_BY_ROLE[normalized] || FALLBACK_NAV_KEYS;
+  return keys.map((key) => ({
+    key,
+    label: t(NAV_LABEL_KEY[key] || 'nav.overview'),
+  }));
+}
+
+function OverviewBody({ user, t }) {
   const [deviceCount, setDeviceCount] = useState(0);
   const normalizedRole = (user?.role || '').toLowerCase();
   const showUserManagement = ['admin', 'superadmin', 'developer'].includes(normalizedRole);
@@ -120,19 +92,37 @@ function OverviewBody({ user }) {
         if (!cancelled && data?.data?.devices) setDeviceCount(data.data.devices.length);
       })
       .catch(() => {});
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const introKey = deviceCount === 1 ? 'overview.intro' : 'overview.intro_other';
+  const introText = t(introKey, { count: deviceCount });
+  const countStr = String(deviceCount);
+  const introParts = introText.split(countStr);
 
   return (
     <div className="overview-body">
       <p className="overview-intro">
-        You have <strong>{deviceCount}</strong> {deviceCount === 1 ? 'device' : 'devices'}. Add a device to get started, then manage block/allow lists below.
+        {introParts.map((part, i) => (
+          <span key={`${i}-${part.slice(0, 8)}`}>
+            {part}
+            {i < introParts.length - 1 ? <strong>{deviceCount}</strong> : null}
+          </span>
+        ))}
       </p>
       <ul className="overview-links">
-        <li><a href="#devices">Devices</a> — Add devices and get setup links.</li>
-        <li><a href="#block-allow-list">Block / Allow list</a> — Manage which sites to block or allow per device.</li>
+        <li>
+          <a href="#devices">{t('overview.devicesLink')}</a>
+        </li>
+        <li>
+          <a href="#block-allow-list">{t('overview.blockAllowLink')}</a>
+        </li>
         {showUserManagement && (
-          <li><a href="#user-management">User Management</a> — Manage users and roles.</li>
+          <li>
+            <a href="#user-management">{t('overview.userManagementLink')}</a>
+          </li>
         )}
       </ul>
       {showUserManagement && <UserOverviewTable currentUser={user} />}
@@ -140,66 +130,72 @@ function OverviewBody({ user }) {
   );
 }
 
-const SECTION_DESCRIPTORS = {
-  overview: {
-    subtitle: 'You have your devices and DNS rules here. Add a device to get started, then manage block/allow lists below.',
-    hideHeader: true,
-    body: (user) => <OverviewBody user={user} />,
-  },
-  devices: {
-    subtitle: 'Add a device for a personal DNS link. Downloads configure your system; the server applies rules and logs blocks.',
-    hideHeader: true,
-    body: (user) => <DevicesPanel user={user} />,
-  },
-  'block-allow-list': {
-    subtitle: 'Block or allow websites for each device. Domains listed here are checked when the device uses our DNS.',
-    hideHeader: true,
-    body: (user) => <BlockAllowPanel user={user} />,
-  },
-  help: {
-    subtitle: 'Start on Devices for your personal link, then follow the three steps below—or open Help anytime.',
-    hideHeader: true,
-    body: () => <HelpPanel />,
-  },
-  privacy: {
-    subtitle: 'Privacy and confidentiality commitment.',
-    hideHeader: true,
-    body: () => <PrivacyPanel />,
-  },
-  'user-management': {
-    subtitle: 'Manage access, roles, and permissions across your organization.',
-    panels: [
-      { title: 'Team roster', description: 'View who is active, pending, or requires action.' },
-      { title: 'Role controls', description: 'Assign, update, or revoke roles in a few clicks.' },
-    ],
-    listTitle: 'Administrative shortcuts',
-    list: [
-      { title: 'Invite a new teammate' },
-      { title: 'Review access requests' },
-      { title: 'Audit recent changes' },
-    ],
-    body: (user) => <UserOverviewTable currentUser={user} />,
-  },
-  updates: {
-    subtitle: 'Catch up on new announcements and reminders.',
-    panels: [{ title: 'Announcements', description: 'Updates will appear here.' }],
-  },
-  activity: {
-    subtitle: 'Follow recent actions across your workspace.',
-    panels: [{ title: 'Recent activity', description: 'See recent changes.' }],
-  },
-};
+function getSectionDescriptors(t) {
+  return {
+    overview: {
+      subtitle: t('sections.overviewSubtitle'),
+      hideHeader: true,
+      body: (user) => <OverviewBody user={user} t={t} />,
+    },
+    devices: {
+      subtitle: t('sections.devicesSubtitle'),
+      hideHeader: true,
+      body: (user) => <DevicesPanel user={user} />,
+    },
+    'block-allow-list': {
+      subtitle: t('sections.blockAllowSubtitle'),
+      hideHeader: true,
+      body: (user) => <BlockAllowPanel user={user} />,
+    },
+    help: {
+      subtitle: t('sections.helpSubtitle'),
+      hideHeader: true,
+      body: () => <HelpPanel />,
+    },
+    privacy: {
+      subtitle: t('sections.privacySubtitle'),
+      hideHeader: true,
+      body: () => <PrivacyPanel />,
+    },
+    'user-management': {
+      subtitle: t('sections.userManagementSubtitle'),
+      panels: [
+        { title: t('userManagement.teamRoster'), description: t('userManagement.teamRosterDesc') },
+        { title: t('userManagement.roleControls'), description: t('userManagement.roleControlsDesc') },
+      ],
+      listTitle: t('sections.administrativeShortcuts'),
+      list: [
+        { title: t('userManagement.inviteTeammate') },
+        { title: t('userManagement.reviewAccessRequests') },
+        { title: t('userManagement.auditRecentChanges') },
+      ],
+      body: (user) => <UserOverviewTable currentUser={user} />,
+    },
+    updates: {
+      subtitle: t('sections.comingSoon'),
+      panels: [{ title: t('sections.stayTuned'), description: t('sections.stayTunedDescription') }],
+    },
+    activity: {
+      subtitle: t('sections.comingSoon'),
+      panels: [{ title: t('sections.inProgress'), description: t('sections.inProgressDescription') }],
+    },
+  };
+}
 
-export default function Dashboard({ user }) {
-  const [sessionUser, setSessionUser] = useState(user);
-  const normalizedRole = (sessionUser?.role || '').toLowerCase();
-  const navItems = NAVIGATION_BY_ROLE[normalizedRole] || FALLBACK_NAV;
+function DashboardPageContent({ sessionUser, setSessionUser }) {
+  const { t, locale } = useDashboardLocale();
   const router = useRouter();
+  const normalizedRole = (sessionUser?.role || '').toLowerCase();
+  const primaryNav = useMemo(() => buildNavItems(t, normalizedRole), [t, normalizedRole]);
 
-  // Fetch and store token from cookies if not in localStorage
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = locale === 'nl' ? 'nl' : 'en';
+    }
+  }, [locale]);
+
   useEffect(() => {
     const fetchToken = async () => {
-      // Only fetch if token is not in localStorage
       if (typeof window !== 'undefined' && !localStorage.getItem('token')) {
         try {
           const response = await fetch('/api/auth/me', {
@@ -211,6 +207,12 @@ export default function Dashboard({ user }) {
             if (data.success && data.data?.token) {
               localStorage.setItem('token', data.data.token);
             }
+            if (data.success && data.data?.user?.preferences) {
+              setSessionUser((prev) => ({
+                ...prev,
+                preferences: data.data.user.preferences,
+              }));
+            }
           }
         } catch (error) {
           console.error('Failed to fetch token:', error);
@@ -218,10 +220,8 @@ export default function Dashboard({ user }) {
       }
     };
     fetchToken();
-  }, []);
+  }, [setSessionUser]);
 
-  const primaryNav = useMemo(() => navItems, [navItems]);
-  
   const resolveSectionKey = useCallback(
     (key) => {
       if (!key) return null;
@@ -237,11 +237,7 @@ export default function Dashboard({ user }) {
     [primaryNav]
   );
 
-  // Initialize activeSection - will be set properly by useEffect after mount
-  const [activeSection, setActiveSection] = useState(() => {
-    // Default to first nav item, hash will be processed in useEffect
-    return navItems[0]?.key || FALLBACK_NAV[0].key;
-  });
+  const [activeSection, setActiveSection] = useState('overview');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [dnsPromptDismissed, setDnsPromptDismissed] = useState(false);
   const [deviceCountForPrompt, setDeviceCountForPrompt] = useState(null);
@@ -258,7 +254,9 @@ export default function Dashboard({ user }) {
         if (!cancelled && data?.data?.devices) setDeviceCountForPrompt(data.data.devices.length);
       })
       .catch(() => setDeviceCountForPrompt(0));
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [activeSection]);
 
   const updateUrlHash = useCallback((key) => {
@@ -289,7 +287,6 @@ export default function Dashboard({ user }) {
     updateUrlHash(resolvedKey);
   }, [router.isReady, sectionParam, resolveSectionKey, updateUrlHash]);
 
-  // Process hash on mount and when hash changes
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
@@ -298,38 +295,30 @@ export default function Dashboard({ user }) {
       try {
         hashValue = decodeURIComponent(hashValue);
       } catch {
-        // ignore decode errors and fall back to raw hash
+        // ignore
       }
       if (hashValue) {
         const resolvedKey = resolveSectionKey(hashValue);
         if (resolvedKey) {
-          setActiveSection((prev) => {
-            // Only update if different to avoid unnecessary re-renders
-            return prev === resolvedKey ? prev : resolvedKey;
-          });
-          // Update URL hash to ensure it's properly formatted
+          setActiveSection((prev) => (prev === resolvedKey ? prev : resolvedKey));
           updateUrlHash(resolvedKey);
           return;
         }
       }
-      // If no valid hash, ensure we're showing the first nav item
-      const firstNavKey = navItems[0]?.key || FALLBACK_NAV[0].key;
-      setActiveSection((prev) => {
-        return prev === firstNavKey ? prev : firstNavKey;
-      });
+      const firstNavKey = primaryNav[0]?.key || 'overview';
+      setActiveSection((prev) => (prev === firstNavKey ? prev : firstNavKey));
     };
 
-    // Apply hash on mount - use requestAnimationFrame to ensure DOM is ready
     const rafId = requestAnimationFrame(() => {
       applyHashToState();
     });
-    
+
     window.addEventListener('hashchange', applyHashToState);
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener('hashchange', applyHashToState);
     };
-  }, [resolveSectionKey, updateUrlHash, navItems]);
+  }, [resolveSectionKey, updateUrlHash, primaryNav]);
 
   const isOverviewSection = activeSection === 'overview';
 
@@ -368,38 +357,36 @@ export default function Dashboard({ user }) {
 
   const handleLogout = useCallback(async () => {
     if (isLoggingOut) return;
-    if (typeof window !== 'undefined') {
-      const confirmed = window.confirm('Are you sure you want to log out?');
-      if (!confirmed) return;
-    }
+    const confirmed =
+      typeof window !== 'undefined' ? window.confirm(t('logoutConfirm')) : false;
+    if (!confirmed) return;
     setIsLoggingOut(true);
     try {
       const response = await fetch('/api/auth/logout', { method: 'POST' });
       if (!response.ok) {
         throw new Error('Logout failed');
       }
-      // Clear all auth-related storage
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token');
         sessionStorage.removeItem('auth_redirect_count');
         sessionStorage.removeItem('auth_redirect_time');
       }
-      await router.replace('/login');
+      await router.replace('/auth');
     } catch (error) {
       console.error('Logout error:', error);
       setIsLoggingOut(false);
     }
-  }, [isLoggingOut, router]);
+  }, [isLoggingOut, router, t]);
 
+  const sectionDescriptors = useMemo(() => getSectionDescriptors(t), [t]);
   const resolvedSectionKey = activeSection;
-
   const activeNavItem = primaryNav.find((item) => item.key === activeSection);
-  const sectionDescriptor = SECTION_DESCRIPTORS[resolvedSectionKey] || {
-    subtitle: 'This area will be available soon.',
+  const sectionDescriptor = sectionDescriptors[resolvedSectionKey] || {
+    subtitle: t('sections.comingSoon'),
     panels: [
       {
-        title: 'In progress',
-        description: 'Content for this section is being prepared.',
+        title: t('sections.inProgress'),
+        description: t('sections.inProgressDescription'),
       },
     ],
   };
@@ -407,18 +394,48 @@ export default function Dashboard({ user }) {
   const panels = sectionDescriptor.panels || [];
   const list = sectionDescriptor.list || [];
   const hasCustomBody = typeof sectionDescriptor.body === 'function';
-  const sectionTitle = activeSection === 'settings' ? 'Settings' : activeNavItem?.label || 'Dashboard';
+  const sectionTitle =
+    activeSection === 'settings' ? t('nav.settings') : activeNavItem?.label || t('brand.title');
   const sectionSubtitle =
     activeSection === 'settings'
-      ? 'Manage your personal details and keep your account secure.'
+      ? t('sections.settingsSubtitle')
       : typeof sectionDescriptor.subtitle === 'function'
         ? sectionDescriptor.subtitle(sessionUser)
         : sectionDescriptor.subtitle;
   const hideHeader = Boolean(sectionDescriptor.hideHeader);
 
-  // Ensure sectionTitle is always a string to prevent React warnings
-  const safeSectionTitle = typeof sectionTitle === 'string' ? sectionTitle : (Array.isArray(sectionTitle) ? sectionTitle.join(' ') : String(sectionTitle || 'Dashboard'));
-  const pageTitle = `${safeSectionTitle} | DNS Control`;
+  const safeSectionTitle =
+    typeof sectionTitle === 'string'
+      ? sectionTitle
+      : Array.isArray(sectionTitle)
+        ? sectionTitle.join(' ')
+        : String(sectionTitle || t('brand.title'));
+  const pageTitle = `${safeSectionTitle} | ${t('brand.title')}`;
+
+  const handleLocaleChange = useCallback(
+    async (nextLocale) => {
+      try {
+        const res = await fetch('/api/users/me', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ locale: nextLocale }),
+        });
+        const result = await safeParseJsonResponse(res).catch(() => ({}));
+        if (!res.ok) throw new Error(result?.message || 'Failed');
+        if (result?.data?.user) {
+          setSessionUser((prev) => ({
+            ...prev,
+            ...result.data.user,
+            preferences: result.data.user.preferences || { locale: nextLocale },
+          }));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [setSessionUser]
+  );
 
   return (
     <>
@@ -433,81 +450,134 @@ export default function Dashboard({ user }) {
         onOpenSettings={handleOpenSettings}
         onLogout={handleLogout}
         isLoggingOut={isLoggingOut}
+        t={t}
       >
         <div className="dashboard-page">
-        {deviceCountForPrompt === 0 && !dnsPromptDismissed && (
-          <div className="dns-prompt-banner">
-            <p className="dns-prompt-title">Use our DNS for this device?</p>
-            <p className="dns-prompt-text">Copy your secure DNS link from Devices, paste it into Firefox or Chrome secure DNS, or download a setup file for your whole device.</p>
-            <div className="dns-prompt-actions">
-              <a href="#devices" className="dns-prompt-btn dns-prompt-btn--primary">Get setup</a>
-              <button type="button" className="dns-prompt-dismiss" onClick={() => setDnsPromptDismissed(true)}>Dismiss</button>
+          <header className="dashboard-toolbar" aria-label={t('layout.language')}>
+            <div className="dashboard-toolbar-main">
+              <h2 className="dashboard-toolbar-title">{t('brand.title')}</h2>
+              <p className="dashboard-toolbar-sub">{t('brand.subtitle')}</p>
             </div>
-          </div>
-        )}
-        <section className={`section ${isOverviewSection ? 'section--compact' : ''}`}>
-          {!isOverviewSection && !hideHeader && (
-            <header className="section-header">
-              <h1 className="section-title">{sectionTitle}</h1>
-              {sectionSubtitle && <p className="section-subtitle">{sectionSubtitle}</p>}
-            </header>
+            <div className="dashboard-toolbar-locale">
+              <label htmlFor="dashboard-locale-select" className="dashboard-toolbar-locale-label">
+                {t('layout.language')}
+              </label>
+              <select
+                id="dashboard-locale-select"
+                className="dashboard-toolbar-select"
+                value={locale}
+                onChange={(e) => handleLocaleChange(e.target.value)}
+              >
+                <option value="en">{t('settings.english')}</option>
+                <option value="nl">{t('settings.dutch')}</option>
+              </select>
+            </div>
+          </header>
+
+          {deviceCountForPrompt === 0 && !dnsPromptDismissed && (
+            <div className="dns-prompt-banner">
+              <p className="dns-prompt-title">{t('dnsPrompt.title')}</p>
+              <p className="dns-prompt-text">{t('dnsPrompt.text')}</p>
+              <div className="dns-prompt-actions">
+                <a href="#devices" className="dns-prompt-btn dns-prompt-btn--primary">
+                  {t('dnsPrompt.getSetup')}
+                </a>
+                <button
+                  type="button"
+                  className="dns-prompt-dismiss"
+                  onClick={() => setDnsPromptDismissed(true)}
+                >
+                  {t('dnsPrompt.dismiss')}
+                </button>
+              </div>
+            </div>
           )}
-          <div className={`section-body ${isOverviewSection ? 'section-body--compact' : ''}`}>
-            {activeSection === 'settings' ? (
-              <SettingsPanel
-                user={sessionUser}
-                onProfileUpdated={(updated) => updated && setSessionUser(updated)}
-              />
-            ) : (
-              <>
-                {panels.length > 0 && (
-                  <div className="section-panels">
-                    {panels.map((panel) => (
-                      <article className="section-card" key={panel.title}>
-                        <div className="section-card-header">
-                          <h2>{panel.title}</h2>
-                          {panel.meta && <span className="section-meta">{panel.meta}</span>}
-                        </div>
-                        <p>{panel.description}</p>
-                      </article>
-                    ))}
-                  </div>
-                )}
-
-                {list.length > 0 && (
-                  <div className="section-list-wrap">
-                    <h3 className="section-list-title">{sectionDescriptor.listTitle || 'Key actions'}</h3>
-                    <ul className="section-list">
-                      {list.map((item) => {
-                        const id = typeof item === 'string' ? item : item.title;
-                        const content = typeof item === 'string' ? { title: item } : item;
-                        return (
-                          <li key={id} className="section-list-item">
-                            <span className="section-list-item-title">{content.title}</span>
-                            {content.description && <p>{content.description}</p>}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                )}
-
-                {hasCustomBody && (
-                  <div className="section-custom">{sectionDescriptor.body(sessionUser)}</div>
-                )}
-
-                {panels.length === 0 && list.length === 0 && !hasCustomBody && (
-                  <div className="empty-state">
-                    <h2>Stay tuned</h2>
-                    <p>We’re preparing something great for this section.</p>
-                  </div>
-                )}
-              </>
+          <section className={`section ${isOverviewSection ? 'section--compact' : ''}`}>
+            {!isOverviewSection && !hideHeader && (
+              <header className="section-header">
+                <h1 className="section-title">{sectionTitle}</h1>
+                {sectionSubtitle && <p className="section-subtitle">{sectionSubtitle}</p>}
+              </header>
             )}
-          </div>
-        </section>
+            <div className={`section-body ${isOverviewSection ? 'section-body--compact' : ''}`}>
+              {activeSection === 'settings' ? (
+                <SettingsPanel
+                  user={sessionUser}
+                  onProfileUpdated={(updated) => {
+                    if (!updated) return;
+                    setSessionUser((prev) => ({
+                      ...prev,
+                      name: updated.name ?? prev.name,
+                      email: updated.email ?? prev.email,
+                      preferences: updated.preferences
+                        ? { ...prev.preferences, ...updated.preferences }
+                        : prev.preferences,
+                    }));
+                  }}
+                />
+              ) : (
+                <>
+                  {panels.length > 0 && (
+                    <div className="section-panels">
+                      {panels.map((panel) => (
+                        <article className="section-card" key={panel.title}>
+                          <div className="section-card-header">
+                            <h2>{panel.title}</h2>
+                            {panel.meta && <span className="section-meta">{panel.meta}</span>}
+                          </div>
+                          <p>{panel.description}</p>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+
+                  {list.length > 0 && (
+                    <div className="section-list-wrap">
+                      <h3 className="section-list-title">
+                        {sectionDescriptor.listTitle || t('sections.keyActions')}
+                      </h3>
+                      <ul className="section-list">
+                        {list.map((item) => {
+                          const id = typeof item === 'string' ? item : item.title;
+                          const content = typeof item === 'string' ? { title: item } : item;
+                          return (
+                            <li key={id} className="section-list-item">
+                              <span className="section-list-item-title">{content.title}</span>
+                              {content.description && <p>{content.description}</p>}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  )}
+
+                  {hasCustomBody && (
+                    <div className="section-custom">{sectionDescriptor.body(sessionUser)}</div>
+                  )}
+
+                  {panels.length === 0 && list.length === 0 && !hasCustomBody && (
+                    <div className="empty-state">
+                      <h2>{t('sections.stayTuned')}</h2>
+                      <p>{t('sections.stayTunedDescription')}</p>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </section>
         </div>
       </DashboardLayout>
     </>
+  );
+}
+
+export default function Dashboard({ user }) {
+  const [sessionUser, setSessionUser] = useState(user);
+  const dashboardLocale = sessionUser?.preferences?.locale || 'en';
+
+  return (
+    <DashboardLocaleProvider locale={dashboardLocale}>
+      <DashboardPageContent sessionUser={sessionUser} setSessionUser={setSessionUser} />
+    </DashboardLocaleProvider>
   );
 }

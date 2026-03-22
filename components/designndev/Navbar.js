@@ -54,8 +54,7 @@ export default function Navbar() {
   const navItems = [
     { href: '/', label: 'Home' },
     { href: '/privacy-policy', label: 'Privacy Policy' },
-    { href: '/login', label: 'Log in' },
-    { href: '/signup', label: 'Sign up' },
+    { href: '/auth', label: 'Sign in' },
   ]
 
   const barClass = isScrolled
@@ -75,7 +74,7 @@ export default function Navbar() {
             href="/"
             className="text-lg sm:text-xl font-semibold text-stone-900 tracking-tight no-underline hover:text-teal-600 transition-colors"
           >
-            DNS Control
+            DMS Control
           </Link>
 
           <div className="hidden md:flex flex-1 justify-center min-w-0">
@@ -99,16 +98,10 @@ export default function Navbar() {
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <div className="hidden md:flex items-center gap-1.5 sm:gap-2">
               <Link
-                href="/login"
-                className="inline-flex items-center justify-center h-8 sm:h-9 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-lg no-underline transition-colors"
-              >
-                Log in
-              </Link>
-              <Link
-                href="/signup"
+                href="/auth"
                 className="inline-flex items-center justify-center h-8 sm:h-9 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg no-underline transition-colors shadow-sm"
               >
-                Sign up
+                Sign in
               </Link>
             </div>
 
@@ -154,18 +147,11 @@ export default function Navbar() {
                 ))}
                 <div className="flex gap-2 pt-2 mt-2 border-t border-stone-200 px-2">
                   <Link
-                    href="/login"
-                    className="flex-1 text-center py-2.5 text-sm font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-lg no-underline transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    href="/signup"
+                    href="/auth"
                     className="flex-1 text-center py-2.5 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg no-underline transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Sign up
+                    Sign in
                   </Link>
                 </div>
               </div>

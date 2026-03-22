@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { safeParseJsonResponse } from '../../utils/safeJsonResponse';
+import { useDashboardLocale } from '../../context/DashboardLocaleContext';
 
 function getAuthHeaders() {
   if (typeof window === 'undefined') return {};
@@ -99,6 +100,7 @@ function IconWrench() {
 }
 
 export default function HelpPanel() {
+  const { t } = useDashboardLocale();
   const [devices, setDevices] = useState([]);
   const [devicesLoading, setDevicesLoading] = useState(true);
   const [copyHint, setCopyHint] = useState('');
@@ -147,26 +149,23 @@ export default function HelpPanel() {
   return (
     <div className="help-panel">
       <div className="help-hero">
-        <p className="help-hero-kicker">Simple guide</p>
-        <h2 className="help-hero-title">Connect your devices to DNS Control</h2>
-        <p className="help-hero-lead">
-          You don’t type a classic “DNS number” here. Instead, each device gets a <strong>personal secure link</strong> (called a
-          DNS-over-HTTPS URL). Your browser uses it for lookups: only domains on your <strong>block</strong> list (or optional adult filter) are stopped; everything else loads as usual. <strong>Allow</strong> rules undo a block for specific sites.
-        </p>
+        <p className="help-hero-kicker">{t('helpPanel.simpleGuide')}</p>
+        <h2 className="help-hero-title">{t('helpPanel.heroTitle')}</h2>
+        <p className="help-hero-lead">{t('helpPanel.heroLead')}</p>
         <a href="#devices" className="help-cta">
           <span className="help-cta-icon" aria-hidden>
             <IconDevices />
           </span>
           <span className="help-cta-text">
-            <strong>Open Devices</strong>
-            <span className="help-cta-sub">Add a device and copy your link there</span>
+            <strong>{t('helpPanel.openDevices')}</strong>
+            <span className="help-cta-sub">{t('helpPanel.openDevicesSub')}</span>
           </span>
         </a>
       </div>
 
       <section className="help-steps" aria-labelledby="help-steps-heading">
         <h3 id="help-steps-heading" className="help-section-title">
-          Three steps
+          {t('helpPanel.threeSteps')}
         </h3>
         <ol className="help-steps-grid">
           <li className="help-step-card">
@@ -176,8 +175,8 @@ export default function HelpPanel() {
             <div className="help-step-icon-wrap" aria-hidden>
               <IconDevices />
             </div>
-            <h4 className="help-step-title">Go to Devices</h4>
-            <p className="help-step-body">Add a phone, laptop, or “Living room PC”. Each one gets its own link and rules.</p>
+            <h4 className="help-step-title">{t('helpPanel.step1Title')}</h4>
+            <p className="help-step-body">{t('helpPanel.step1Body')}</p>
           </li>
           <li className="help-step-card">
             <div className="help-step-badge" aria-hidden>
@@ -186,8 +185,8 @@ export default function HelpPanel() {
             <div className="help-step-icon-wrap" aria-hidden>
               <IconCopyLink />
             </div>
-            <h4 className="help-step-title">Copy your secure DNS link</h4>
-            <p className="help-step-body">Use <strong>Copy</strong> next to the long URL. That’s what you paste—not a normal website address for daily browsing.</p>
+            <h4 className="help-step-title">{t('helpPanel.step2Title')}</h4>
+            <p className="help-step-body">{t('helpPanel.step2Body')}</p>
           </li>
           <li className="help-step-card">
             <div className="help-step-badge" aria-hidden>
@@ -196,8 +195,8 @@ export default function HelpPanel() {
             <div className="help-step-icon-wrap" aria-hidden>
               <IconBrowser />
             </div>
-            <h4 className="help-step-title">Paste into Firefox, Chrome, or your system</h4>
-            <p className="help-step-body">Follow the guides below. Or download a setup file from Devices for your whole computer.</p>
+            <h4 className="help-step-title">{t('helpPanel.step3Title')}</h4>
+            <p className="help-step-body">{t('helpPanel.step3Body')}</p>
           </li>
         </ol>
       </section>
@@ -205,24 +204,26 @@ export default function HelpPanel() {
       <section className="help-doh-section" aria-labelledby="help-doh-heading">
         <div className="help-doh-header">
           <h3 id="help-doh-heading" className="help-section-title">
-            Your DNS links (same as on Devices)
+            {t('helpPanel.dohSectionTitle')}
           </h3>
           <a href="#devices" className="help-text-link">
-            Manage in Devices →
+            {t('helpPanel.manageDevices')}
           </a>
         </div>
         <p className="help-doh-intro">
-          Paste into <strong>Secure DNS</strong> / <strong>DNS over HTTPS</strong> (path-style URL, e.g. <code className="help-inline-code">…/api/dns-query/TOKEN</code>).{' '}
-          <strong>http://localhost</strong> may be rejected by Firefox—use Chrome for local tests or an <code>https://</code> URL (tunnel or real deploy). Each device has its own link.
+          Paste into <strong>Secure DNS</strong> / <strong>DNS over HTTPS</strong> (path-style URL, e.g.{' '}
+          <code className="help-inline-code">…/api/dns-query/TOKEN</code>).{' '}
+          <strong>http://localhost</strong> may be rejected by Firefox—use Chrome for local tests or an <code>https://</code> URL
+          (tunnel or real deploy). Each device has its own link.
         </p>
         {devicesLoading ? (
-          <p className="help-doh-loading">Loading your devices…</p>
+          <p className="help-doh-loading">{t('helpPanel.dohLoading')}</p>
         ) : devices.length === 0 ? (
           <div className="help-doh-empty">
-            <p>You don’t have a device yet. Add one on the Devices page—then your personal link will show here and there.</p>
+            <p>{t('helpPanel.dohEmpty')}</p>
             <a href="#devices" className="help-cta help-cta--compact">
               <span className="help-cta-text">
-                <strong>Add a device</strong>
+                <strong>{t('helpPanel.addDeviceCta')}</strong>
               </span>
             </a>
           </div>
@@ -239,7 +240,7 @@ export default function HelpPanel() {
                   <div className="help-doh-url-row">
                     <code className="help-doh-code">{d.dohUrl}</code>
                     <button type="button" className="help-copy-btn" onClick={() => copyDoh(d.dohUrl, id)}>
-                      {copyHint === id ? 'Copied!' : 'Copy'}
+                      {copyHint === id ? t('helpPanel.copied') : t('helpPanel.copy')}
                     </button>
                   </div>
                 </li>
@@ -250,7 +251,7 @@ export default function HelpPanel() {
       </section>
 
       <div className="help-guides">
-        <h3 className="help-section-title">Where to paste the link</h3>
+        <h3 className="help-section-title">{t('helpPanel.whereToPaste')}</h3>
         <div className="help-guide-grid">
           <article className="help-guide-card">
             <div className="help-guide-card-top">

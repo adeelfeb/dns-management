@@ -6,7 +6,7 @@ import { localeCookieName } from './i18n/config';
 const handleI18nRouting = createMiddleware(routing);
 
 /** Pages Router routes that live at /signup, /login, etc. (no locale prefix). */
-const PAGES_ROUTES = ['signup', 'login', 'dashboard', 'privacy-policy', 'verify-email', 'contact'];
+const PAGES_ROUTES = ['signup', 'login', 'auth', 'dashboard', 'privacy-policy', 'verify-email', 'contact'];
 const LOCALES = routing.locales;
 
 export default function middleware(request) {

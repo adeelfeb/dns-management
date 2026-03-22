@@ -37,6 +37,9 @@ const UserSchema = new mongoose.Schema(
     valentineCredits: { type: Number, default: 1, min: 0 },
     // Valentine email resends: base users get 1 free resend per link, then use these credits
     valentineEmailCredits: { type: Number, default: 0, min: 0 },
+    preferences: {
+      locale: { type: String, enum: ['en', 'nl'], default: 'en' },
+    },
   },
   {
     timestamps: true,

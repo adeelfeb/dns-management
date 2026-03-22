@@ -33,7 +33,7 @@ export default function VerifyEmailPage() {
   useEffect(() => {
     // If no email is provided, redirect back to login
     if (router.isReady && !email) {
-      router.replace('/login');
+      router.replace('/auth');
     }
   }, [router.isReady, email, router]);
 
@@ -133,7 +133,7 @@ export default function VerifyEmailPage() {
       
       // Redirect immediately - cookies are set synchronously
       // Use window.location for hash navigation as Next.js router doesn't handle hashes well
-      window.location.href = '/dashboard#blogs';
+      window.location.href = '/dashboard#overview';
       
     } catch (err) {
       setError(err.message || "Verification failed. Please try again.");
@@ -212,7 +212,7 @@ export default function VerifyEmailPage() {
 
           <footer className="flex justify-center gap-2 text-[0.95rem] text-stone-600">
             <span>Wrong email?</span>
-            <Link href="/signup" className="font-semibold text-teal-600 hover:underline">Create a new account</Link>
+            <Link href="/auth?mode=signup" className="font-semibold text-teal-600 hover:underline">Create a new account</Link>
           </footer>
         </div>
       </div>

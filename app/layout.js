@@ -9,17 +9,17 @@ const poppins = Poppins({
 })
 
 export const metadata = {
-  title: 'DNS Control | Block or allow websites per device',
+  title: 'DMS Control | Block or allow websites per device',
   description: 'Control DNS for your devices. Block or allow websites per device. Use our extension or download a setup file—manage everything from one dashboard.',
-  keywords: 'DNS, DNS control, block websites, allow list, per device',
+  keywords: 'DNS, DMS Control, block websites, allow list, per device',
   icons: {
     icon: '/favicon.svg',
     apple: '/favicon.svg',
   },
   openGraph: {
-    title: 'DNS Control | Block or allow websites per device',
+    title: 'DMS Control | Block or allow websites per device',
     description: 'Control DNS for your devices. Block or allow websites per device. Manage everything from one dashboard.',
-    siteName: 'DNS Control',
+    siteName: 'DMS Control',
     type: 'website',
   },
 }

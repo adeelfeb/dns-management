@@ -1,6 +1,7 @@
 import connectDB from '../lib/db';
 import User from '../models/User';
 import { jsonError, jsonSuccess } from '../lib/response';
+import { normalizeUserLocale } from '../lib/userLocale';
 
 function toSafeUser(doc) {
   if (!doc) return null;
@@ -11,6 +12,9 @@ function toSafeUser(doc) {
     role: doc.role || 'base_user',
     roleRef: doc.roleRef || null,
     createdAt: doc.createdAt,
+    preferences: {
+      locale: normalizeUserLocale(doc.preferences?.locale),
+    },
   };
 }
 
@@ -26,16 +30,29 @@ export async function updateCurrentUser(req, res) {
     return jsonError(res, 401, 'Authentication required');
   }
 
-  const { name } = req.body || {};
-  if (!name || typeof name !== 'string' || !name.trim()) {
-    return jsonError(res, 400, 'Name is required');
+  const { name, locale } = req.body || {};
+  const update = {};
+
+  if (name !== undefined && name !== null) {
+    if (typeof name !== 'string' || !name.trim()) {
+      return jsonError(res, 400, 'Name cannot be empty');
+    }
+    update.name = name.trim();
+  }
+
+  if (locale !== undefined && locale !== null) {
+    update['preferences.locale'] = normalizeUserLocale(String(locale));
+  }
+
+  if (Object.keys(update).length === 0) {
+    return jsonError(res, 400, 'Provide name and/or locale to update');
   }
 
   try {
     await connectDB();
     const updated = await User.findByIdAndUpdate(
       req.user._id,
-      { name: name.trim() },
+      { $set: update },
       { new: true, runValidators: true }
     ).select('-password');
 
@@ -43,9 +60,20 @@ export async function updateCurrentUser(req, res) {
       return jsonError(res, 404, 'User not found');
     }
 
-    req.user.name = updated.name;
+    if (update.name !== undefined) req.user.name = updated.name;
+    if (update['preferences.locale'] !== undefined) {
+      req.user.preferences = req.user.preferences || {};
+      req.user.preferences.locale = updated.preferences?.locale;
+    }
 
-    return jsonSuccess(res, 200, 'Profile updated', { user: toSafeUser(updated) });
+    const message =
+      update.name !== undefined && update['preferences.locale'] !== undefined
+        ? 'Profile updated'
+        : update['preferences.locale'] !== undefined
+          ? 'Language preference saved'
+          : 'Profile updated';
+
+    return jsonSuccess(res, 200, message, { user: toSafeUser(updated) });
   } catch (err) {
     return jsonError(res, 500, 'Failed to update profile', err.message);
   }

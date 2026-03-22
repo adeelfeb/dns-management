@@ -7,6 +7,7 @@ import { ensureRole, ensureUserHasRole } from '../lib/roles';
 import { generateOTP, generateOTPExpiry, verifyOTP } from '../utils/otp';
 import { sendOTPEmail, sendWelcomeEmail, sendEmailAsync } from '../utils/email';
 import { logger } from '../utils/logger';
+import { normalizeUserLocale } from '../lib/userLocale';
 
 const DEFAULT_ROLES = [
   { name: 'superadmin', description: 'Highest privileged role' },
@@ -26,6 +27,9 @@ function sanitizeUser(userDoc) {
     role: userDoc.role || 'base_user',
     roleRef: userDoc.roleRef,
     createdAt: userDoc.createdAt,
+    preferences: {
+      locale: normalizeUserLocale(userDoc.preferences?.locale),
+    },
   };
 }
 

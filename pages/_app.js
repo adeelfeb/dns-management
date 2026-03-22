@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }) {
     <ErrorBoundary>
       <ToastProvider>
         <Head>
-          <title>Design n Dev</title>
+          <title>DMS Control</title>
           <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
           <link rel="alternate icon" href="/favicon.svg" />
           <link rel="apple-touch-icon" href="/favicon.svg" />

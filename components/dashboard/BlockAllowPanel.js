@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { safeParseJsonResponse } from '../../utils/safeJsonResponse';
+import { useDashboardLocale } from '../../context/DashboardLocaleContext';
 
 function getAuthHeaders() {
   if (typeof window === 'undefined') return {};
@@ -8,6 +9,7 @@ function getAuthHeaders() {
 }
 
 export default function BlockAllowPanel({ user }) {
+  const { t } = useDashboardLocale();
   const [devices, setDevices] = useState([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState('');
   const [rules, setRules] = useState([]);
@@ -28,17 +30,17 @@ export default function BlockAllowPanel({ user }) {
         credentials: 'include',
       });
       const data = await safeParseJsonResponse(res).catch(() => ({}));
-      if (!res.ok) throw new Error(data?.message || 'Failed to load devices');
+      if (!res.ok) throw new Error(data?.message || t('blockAllow.failedToLoad'));
       const list = data?.data?.devices || [];
       setDevices(list);
       if (list.length > 0 && !selectedDeviceId) setSelectedDeviceId(list[0]._id);
     } catch (e) {
-      setMessage({ type: 'error', text: e.message || 'Failed to load devices' });
+      setMessage({ type: 'error', text: e.message || t('blockAllow.failedToLoad') });
       setDevices([]);
     } finally {
       setLoading(false);
     }
-  }, [selectedDeviceId]);
+  }, [selectedDeviceId, t]);
 
   const fetchRules = useCallback(async () => {
     if (!selectedDeviceId) {
@@ -52,15 +54,15 @@ export default function BlockAllowPanel({ user }) {
         credentials: 'include',
       });
       const data = await safeParseJsonResponse(res).catch(() => ({}));
-      if (!res.ok) throw new Error(data?.message || 'Failed to load rules');
+      if (!res.ok) throw new Error(data?.message || t('blockAllow.failedToLoadRules'));
       setRules(data?.data?.rules || []);
     } catch (e) {
-      setMessage({ type: 'error', text: e.message || 'Failed to load rules' });
+      setMessage({ type: 'error', text: e.message || t('blockAllow.failedToLoadRules') });
       setRules([]);
     } finally {
       setRulesLoading(false);
     }
-  }, [selectedDeviceId]);
+  }, [selectedDeviceId, t]);
 
   useEffect(() => {
     fetchDevices();
@@ -113,11 +115,11 @@ export default function BlockAllowPanel({ user }) {
         }),
       });
       const data = await safeParseJsonResponse(res).catch(() => ({}));
-      if (!res.ok) throw new Error(data?.message || 'Failed to add rule');
+      if (!res.ok) throw new Error(data?.message || t('blockAllow.failedToAdd'));
       setNewDomain('');
       fetchRules();
     } catch (e) {
-      setMessage({ type: 'error', text: e.message || 'Failed to add rule' });
+      setMessage({ type: 'error', text: e.message || t('blockAllow.failedToAdd') });
     } finally {
       setAddLoading(false);
     }
@@ -131,17 +133,17 @@ export default function BlockAllowPanel({ user }) {
         credentials: 'include',
       });
       const data = await safeParseJsonResponse(res).catch(() => ({}));
-      if (!res.ok) throw new Error(data?.message || 'Failed to delete rule');
+      if (!res.ok) throw new Error(data?.message || t('blockAllow.failedToDelete'));
       fetchRules();
     } catch (e) {
-      setMessage({ type: 'error', text: e.message || 'Failed to delete rule' });
+      setMessage({ type: 'error', text: e.message || t('blockAllow.failedToDelete') });
     }
   };
 
   if (loading) {
     return (
       <div className="block-allow-panel">
-        <p>Loading…</p>
+        <p>{t('blockAllow.loadingPanel')}</p>
       </div>
     );
   }
@@ -155,15 +157,13 @@ export default function BlockAllowPanel({ user }) {
           {message.text}
         </div>
       )}
-      <p className="block-allow-intro">
-        When this device uses your DoH URL in the browser: domains you <strong>block</strong> (or optional adult list) get no DNS answer—sites won’t load. Everything else resolves normally. <strong>Allow</strong> rules override a block for that domain (exceptions).
-      </p>
+      <p className="block-allow-intro">{t('blockAllow.intro')}</p>
       {devices.length === 0 ? (
-        <p className="block-allow-empty">Add a device first in the Devices section.</p>
+        <p className="block-allow-empty">{t('blockAllow.addDeviceFirst')}</p>
       ) : (
         <>
           <label className="device-select-label">
-            Device
+            {t('blockAllow.device')}
             <select
               value={selectedDeviceId}
               onChange={(e) => setSelectedDeviceId(e.target.value)}
@@ -179,34 +179,36 @@ export default function BlockAllowPanel({ user }) {
               type="text"
               value={newDomain}
               onChange={(e) => setNewDomain(e.target.value)}
-              placeholder="e.g. example.com or *.example.com"
+              placeholder={t('blockAllow.placeholder')}
             />
             <select value={newAction} onChange={(e) => setNewAction(e.target.value)}>
-              <option value="block">Block</option>
-              <option value="allow">Allow</option>
+              <option value="block">{t('blockAllow.block')}</option>
+              <option value="allow">{t('blockAllow.allow')}</option>
             </select>
             <select value={newType} onChange={(e) => setNewType(e.target.value)}>
-              <option value="exact">Exact</option>
-              <option value="suffix">Suffix</option>
+              <option value="exact">{t('blockAllow.exact')}</option>
+              <option value="suffix">{t('blockAllow.suffix')}</option>
             </select>
             <button type="submit" disabled={addLoading || !newDomain.trim()}>
-              {addLoading ? 'Adding…' : 'Add'}
+              {addLoading ? t('blockAllow.adding') : t('blockAllow.add')}
             </button>
           </form>
 
           {rulesLoading ? (
-            <p>Loading rules…</p>
+            <p>{t('blockAllow.loadingRules')}</p>
           ) : (
             <ul className="rules-list">
               {rules.length === 0 && (
-                <li className="rules-empty">No rules for this device yet.</li>
+                <li className="rules-empty">{t('blockAllow.noRules')}</li>
               )}
               {rules.map((r) => (
                 <li key={r._id} className="rule-item">
                   <span className="rule-domain">{r.domain}</span>
                   <span className={`rule-action rule-action--${r.action}`}>{r.action}</span>
                   <span className="rule-type">{r.type}</span>
-                  <button type="button" className="btn-delete" onClick={() => handleDeleteRule(r._id)}>Remove</button>
+                  <button type="button" className="btn-delete" onClick={() => handleDeleteRule(r._id)}>
+                    {t('blockAllow.remove')}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -214,12 +216,12 @@ export default function BlockAllowPanel({ user }) {
 
           {selectedDeviceId && (
             <div className="block-log-section">
-              <h3 className="block-log-title">Recently blocked (live)</h3>
-              <p className="block-log-intro">Domains that were blocked when this device used our DNS. Add block rules above to block more.</p>
+              <h3 className="block-log-title">{t('blockAllow.recentlyBlockedTitle')}</h3>
+              <p className="block-log-intro">{t('blockAllow.blockLogIntro')}</p>
               {blockLogLoading ? (
-                <p className="block-log-loading">Loading…</p>
+                <p className="block-log-loading">{t('blockAllow.loadingPanel')}</p>
               ) : blockLog.length === 0 ? (
-                <p className="block-log-empty">No blocked requests yet. Once this device uses your DoH URL and hits a blocked domain, it will appear here.</p>
+                <p className="block-log-empty">{t('blockAllow.blockLogEmpty')}</p>
               ) : (
                 <ul className="block-log-list">
                   {blockLog.map((entry) => (

@@ -1,17 +1,17 @@
 import React from 'react';
 import { Shield, Lock, EyeOff, FileText, Heart, CheckCircle } from 'lucide-react';
+import { useDashboardLocale } from '../../context/DashboardLocaleContext';
 
 export default function PrivacyPanel() {
+  const { t } = useDashboardLocale();
   return (
     <div className="privacy-panel">
       <div className="privacy-header">
         <div className="privacy-icon-large">
           <Shield size={48} />
         </div>
-        <h2>Privacy & Confidentiality Commitment</h2>
-        <p className="privacy-intro">
-          This platform lets you <strong>control DNS for your devices</strong>: block or allow websites per device. Your account, devices, and block/allow rules are stored so the service can apply your preferences. We do not sell your data.
-        </p>
+        <h2>{t('privacyPanel.heading')}</h2>
+        <p className="privacy-intro">{t('privacyPanel.intro')}</p>
       </div>
 
       <div className="privacy-main">
@@ -20,43 +20,41 @@ export default function PrivacyPanel() {
             <Lock size={28} />
           </div>
           <div className="privacy-card-content">
-            <h3>Your Data is Protected</h3>
-            <p>
-              We store only what is needed to run the service: <strong>account details</strong> (name, email, password hash), <strong>devices</strong> you add and their secure tokens, and <strong>block/allow rules</strong> you set. We may optionally log DNS query counts per device for statistics; we <strong>do not sell your data</strong>.
-            </p>
+            <h3>{t('privacyPanel.dataProtectedTitle')}</h3>
+            <p>{t('privacyPanel.dataProtectedDesc')}</p>
           </div>
         </div>
 
         <div className="privacy-features">
-          <h3 className="features-title">Our Privacy Promise</h3>
+          <h3 className="features-title">{t('privacyPanel.promiseTitle')}</h3>
           <div className="features-grid">
             <div className="feature-item">
               <div className="feature-icon">
                 <EyeOff size={24} />
               </div>
-              <h4>No Data Collection</h4>
-              <p>We don't track, collect, or store your personal information</p>
+              <h4>{t('privacyPanel.noDataCollection')}</h4>
+              <p>{t('privacyPanel.noDataCollectionDesc')}</p>
             </div>
             <div className="feature-item">
               <div className="feature-icon">
                 <Shield size={24} />
               </div>
-              <h4>Complete Privacy</h4>
-              <p>Your data remains private and confidential at all times</p>
+              <h4>{t('privacyPanel.completePrivacy')}</h4>
+              <p>{t('privacyPanel.completePrivacyDesc')}</p>
             </div>
             <div className="feature-item">
               <div className="feature-icon">
                 <FileText size={24} />
               </div>
-              <h4>Open Source</h4>
-              <p>This is an open-source project - transparent and trustworthy</p>
+              <h4>{t('privacyPanel.openSource')}</h4>
+              <p>{t('privacyPanel.openSourceDesc')}</p>
             </div>
             <div className="feature-item">
               <div className="feature-icon">
                 <Heart size={24} />
               </div>
-              <h4>Your Control</h4>
-              <p>You decide which sites to block or allow per device; you can revoke a device at any time</p>
+              <h4>{t('privacyPanel.yourControl')}</h4>
+              <p>{t('privacyPanel.yourControlDesc')}</p>
             </div>
           </div>
         </div>
@@ -65,10 +63,8 @@ export default function PrivacyPanel() {
           <div className="guarantee-content">
             <CheckCircle size={32} className="guarantee-icon" />
             <div className="guarantee-text">
-              <h3>Enjoy Complete Peace of Mind</h3>
-              <p>
-                Use DNS control with peace of mind. We keep only the data needed to provide the service and do not sell or share it with third parties for marketing.
-              </p>
+              <h3>{t('privacyPanel.peaceOfMindTitle')}</h3>
+              <p>{t('privacyPanel.peaceOfMindDesc')}</p>
             </div>
           </div>
         </div>

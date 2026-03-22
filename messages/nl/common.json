@@ -1,5 +1,5 @@
 {
-  "siteName": "DNS Control",
+  "siteName": "DMS Control",
   "nav": {
     "home": "Home",
     "howItWorks": "Hoe het werkt",
@@ -13,7 +13,7 @@
     "backToHome": "Terug naar home"
   },
   "footer": {
-    "siteName": "DNS Control",
+    "siteName": "DMS Control",
     "allRightsReserved": "Alle rechten voorbehouden."
   },
   "aria": {

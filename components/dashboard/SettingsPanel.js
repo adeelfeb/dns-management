@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { safeParseJsonResponse } from '../../utils/safeJsonResponse';
+import { useDashboardLocale } from '../../context/DashboardLocaleContext';
+import { localeCookieName } from '../../i18n/config';
 
 export default function SettingsPanel({ user, onProfileUpdated }) {
+  const { t } = useDashboardLocale();
   const [profileName, setProfileName] = useState(user?.name || '');
   useEffect(() => {
     setProfileName(user?.name || '');
@@ -12,6 +15,8 @@ export default function SettingsPanel({ user, onProfileUpdated }) {
   const [passwords, setPasswords] = useState({ currentPassword: '', newPassword: '', confirm: '' });
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordMessage, setPasswordMessage] = useState(null);
+  const [localeSaving, setLocaleSaving] = useState(false);
+  const [localeMessage, setLocaleMessage] = useState(null);
 
   const disableProfileSubmit = useMemo(() => {
     const trimmed = profileName.trim();
@@ -28,6 +33,37 @@ export default function SettingsPanel({ user, onProfileUpdated }) {
     );
   }, [passwordLoading, passwords]);
 
+  const handleLocaleChange = async (event) => {
+    const next = event.target.value;
+    setLocaleSaving(true);
+    setLocaleMessage(null);
+    try {
+      const response = await fetch('/api/users/me', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ locale: next }),
+      });
+      const result = await safeParseJsonResponse(response).catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(result?.message || t('settings.languageSaveFailed'));
+      }
+      if (typeof document !== 'undefined') {
+        const maxAge = 60 * 60 * 24 * 365;
+        document.cookie = `${localeCookieName}=${next};path=/;max-age=${maxAge};SameSite=Lax`;
+        document.documentElement.lang = next === 'nl' ? 'nl' : 'en';
+      }
+      setLocaleMessage({ type: 'success', text: result?.message || t('settings.languageUpdated') });
+      if (result?.data?.user && typeof onProfileUpdated === 'function') {
+        onProfileUpdated(result.data.user);
+      }
+    } catch (error) {
+      setLocaleMessage({ type: 'error', text: error.message || t('settings.languageSaveFailed') });
+    } finally {
+      setLocaleSaving(false);
+    }
+  };
+
   const handleProfileSubmit = async (event) => {
     event.preventDefault();
     if (disableProfileSubmit) return;
@@ -43,15 +79,15 @@ export default function SettingsPanel({ user, onProfileUpdated }) {
 
       const result = await safeParseJsonResponse(response).catch(() => ({}));
       if (!response.ok) {
-        throw new Error(result?.message || 'Unable to update profile');
+        throw new Error(result?.message || t('settings.unableToUpdateProfile'));
       }
 
-      setProfileMessage({ type: 'success', text: result?.message || 'Profile updated' });
+      setProfileMessage({ type: 'success', text: result?.message || t('settings.profileUpdated') });
       if (result?.data?.user && typeof onProfileUpdated === 'function') {
         onProfileUpdated(result.data.user);
       }
     } catch (error) {
-      setProfileMessage({ type: 'error', text: error.message || 'Update failed' });
+      setProfileMessage({ type: 'error', text: error.message || t('settings.updateFailed') });
     } finally {
       setProfileLoading(false);
     }
@@ -75,13 +111,13 @@ export default function SettingsPanel({ user, onProfileUpdated }) {
 
       const result = await safeParseJsonResponse(response).catch(() => ({}));
       if (!response.ok) {
-        throw new Error(result?.message || 'Unable to update password');
+        throw new Error(result?.message || t('settings.unableToUpdatePassword'));
       }
 
-      setPasswordMessage({ type: 'success', text: result?.message || 'Password updated' });
+      setPasswordMessage({ type: 'success', text: result?.message || t('settings.passwordUpdated') });
       setPasswords({ currentPassword: '', newPassword: '', confirm: '' });
     } catch (error) {
-      setPasswordMessage({ type: 'error', text: error.message || 'Update failed' });
+      setPasswordMessage({ type: 'error', text: error.message || t('settings.updateFailed') });
     } finally {
       setPasswordLoading(false);
     }
@@ -90,14 +126,33 @@ export default function SettingsPanel({ user, onProfileUpdated }) {
   return (
     <div className="settings-grid">
       <section className="settings-card">
+        <label className="field">
+          <span className="label">{t('settings.interfaceLanguage')}</span>
+          <select
+            value={user?.preferences?.locale || 'en'}
+            onChange={handleLocaleChange}
+            disabled={localeSaving}
+            className="settings-locale-select"
+          >
+            <option value="en">{t('settings.english')}</option>
+            <option value="nl">{t('settings.dutch')}</option>
+          </select>
+          <p className="settings-hint">{t('settings.interfaceLanguageHint')}</p>
+        </label>
+        {localeMessage && (
+          <p className={`message message--${localeMessage.type}`}>{localeMessage.text}</p>
+        )}
+      </section>
+
+      <section className="settings-card">
         <form onSubmit={handleProfileSubmit} className="form">
           <label className="field">
-            <span className="label">Display name</span>
+            <span className="label">{t('settings.displayName')}</span>
             <input
               type="text"
               value={profileName}
               onChange={(event) => setProfileName(event.target.value)}
-              placeholder="Your name"
+              placeholder={t('settings.displayNamePlaceholder')}
             />
           </label>
 
@@ -106,7 +161,7 @@ export default function SettingsPanel({ user, onProfileUpdated }) {
           )}
 
           <button type="submit" disabled={disableProfileSubmit}>
-            {profileLoading ? 'Saving…' : 'Save changes'}
+            {profileLoading ? t('settings.saving') : t('settings.saveChanges')}
           </button>
         </form>
       </section>
@@ -114,45 +169,45 @@ export default function SettingsPanel({ user, onProfileUpdated }) {
       <section className="settings-card">
         <form onSubmit={handlePasswordSubmit} className="form">
           <label className="field">
-            <span className="label">Current password</span>
+            <span className="label">{t('settings.currentPassword')}</span>
             <input
               type="password"
               value={passwords.currentPassword}
               onChange={(event) =>
                 setPasswords((prev) => ({ ...prev, currentPassword: event.target.value }))
               }
-              placeholder="Enter current password"
+              placeholder={t('settings.currentPasswordPlaceholder')}
             />
           </label>
 
           <label className="field">
-            <span className="label">New password</span>
+            <span className="label">{t('settings.newPassword')}</span>
             <input
               type="password"
               value={passwords.newPassword}
               onChange={(event) =>
                 setPasswords((prev) => ({ ...prev, newPassword: event.target.value }))
               }
-              placeholder="At least 6 characters"
+              placeholder={t('settings.newPasswordPlaceholder')}
             />
           </label>
 
           <label className="field">
-            <span className="label">Confirm password</span>
+            <span className="label">{t('settings.confirmPassword')}</span>
             <input
               type="password"
               value={passwords.confirm}
               onChange={(event) =>
                 setPasswords((prev) => ({ ...prev, confirm: event.target.value }))
               }
-              placeholder="Re-enter new password"
+              placeholder={t('settings.confirmPasswordPlaceholder')}
             />
           </label>
 
           {passwords.newPassword &&
             passwords.confirm &&
             passwords.newPassword !== passwords.confirm && (
-              <p className="message message--error">New passwords do not match.</p>
+              <p className="message message--error">{t('settings.passwordsDoNotMatch')}</p>
             )}
 
           {passwordMessage && (
@@ -160,7 +215,7 @@ export default function SettingsPanel({ user, onProfileUpdated }) {
           )}
 
           <button type="submit" disabled={disablePasswordSubmit}>
-            {passwordLoading ? 'Updating…' : 'Update password'}
+            {passwordLoading ? t('settings.updating') : t('settings.updatePassword')}
           </button>
         </form>
       </section>
@@ -275,6 +330,26 @@ export default function SettingsPanel({ user, onProfileUpdated }) {
 
         .message--error {
           color: #dc2626;
+        }
+
+        .settings-locale-select {
+          width: 100%;
+          max-width: 100%;
+          border-radius: 0.75rem;
+          border: 2px solid rgba(148, 163, 184, 0.3);
+          padding: 0.875rem 1.125rem;
+          font-size: 0.95rem;
+          background: #ffffff;
+          color: #1e293b;
+          box-sizing: border-box;
+          font-family: inherit;
+        }
+
+        .settings-hint {
+          font-size: 0.85rem;
+          color: #64748b;
+          margin: 0;
+          line-height: 1.45;
         }
 
         @media (max-width: 960px) {

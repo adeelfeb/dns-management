@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-base font-semibold text-stone-900 mb-3">DNS Control</h3>
+              <h3 className="text-base font-semibold text-stone-900 mb-3">DMS Control</h3>
               <p className="text-stone-600 text-sm leading-relaxed">
                 Control DNS for your devices. Block or allow websites per device from one dashboard.
               </p>
@@ -27,8 +27,7 @@ export default function Footer() {
             <div>
               <h4 className="font-semibold text-stone-900 mb-3">Account</h4>
               <ul className="space-y-2 text-stone-600 text-sm">
-                <li><Link href="/login" className="hover:text-teal-600 transition-colors">Log in</Link></li>
-                <li><Link href="/signup" className="hover:text-teal-600 transition-colors">Sign up</Link></li>
+                <li><Link href="/auth" className="hover:text-teal-600 transition-colors">Sign in</Link></li>
                 <li><Link href="/dashboard" className="hover:text-teal-600 transition-colors">Dashboard</Link></li>
               </ul>
             </div>
@@ -38,7 +37,7 @@ export default function Footer() {
       <section className="py-4 border-t border-stone-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-stone-500 text-sm">
-            © {currentYear} DNS Control. All rights reserved.
+            © {currentYear} DMS Control. All rights reserved.
           </p>
         </div>
       </section>

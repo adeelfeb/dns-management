@@ -131,6 +131,7 @@ export default function DashboardLayout({
   isLoggingOut,
   chatUnreadCount = 0,
   children,
+  t = (key) => key,
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const roleLabel = user?.role ? user.role.replace(/_/g, ' ') : 'User';
@@ -195,7 +196,7 @@ export default function DashboardLayout({
             </div>
             <div className="brand-text">
               <span className="brand-title">
-                <span className="brand-title-teal">DNS</span>
+                <span className="brand-title-teal">DMS</span>
                 <span className="brand-title-separator"> </span>
                 <span className="brand-title-teal-alt">Control</span>
               </span>
@@ -253,7 +254,7 @@ export default function DashboardLayout({
                 <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
               </svg>
             </span>
-            <span className="nav-label">SETTINGS</span>
+            <span className="nav-label">{t('nav.settings')}</span>
           </button>
           <button
             type="button"
@@ -268,7 +269,7 @@ export default function DashboardLayout({
                 <line x1="21" y1="12" x2="9" y2="12"></line>
               </svg>
             </span>
-            <span className="nav-label">{isLoggingOut ? 'LOGGING OUT…' : 'LOGOUT'}</span>
+            <span className="nav-label">{isLoggingOut ? t('nav.loggingOut') : t('nav.logout')}</span>
           </button>
         </div>
       </aside>

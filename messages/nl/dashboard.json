@@ -11,8 +11,13 @@
     "loggingOut": "Bezig met uitloggen…"
   },
   "brand": {
-    "title": "DNS Dashboard",
+    "title": "DMS Control",
+    "subtitle": "Dashboard",
     "user": "Gebruiker"
+  },
+  "layout": {
+    "language": "Taal",
+    "languageShort": "Taal"
   },
   "overview": {
     "intro": "Je hebt {count} apparaat. Voeg een apparaat toe om te beginnen, en beheer daarna de blokkeer-/toestaanlijsten hieronder.",
@@ -54,6 +59,18 @@
   },
   "logoutConfirm": "Weet je zeker dat je wilt uitloggen?",
   "devices": {
+    "longIntro": "Elk apparaat krijgt een persoonlijke DNS-link. Als een telefoon, pc of browser die link gebruikt, lopen lookups via deze dienst: we passen je blokkeer-/toestaanregels toe (en optioneel volwassenfiltering), loggen blokkades in je dashboard en beantwoorden of sturen de query door.",
+    "longIntroSecondary": "Hulp nodig? Bekijk de stappen per apparaat op de",
+    "homePageLink": "startpagina",
+    "setupForSystem": "Setup voor je systeem downloaden:",
+    "setupFiles": "Setupbestanden:",
+    "extensionBundle": "Extensiebundel:",
+    "extensionBundleChrome": "Bundel voor Chrome-extensie:",
+    "extensionFilename": "dns-control-config.json",
+    "blockAdult": "Volwassen content blokkeren (porno, expliciete sites)",
+    "adultBlocked": "Volwassen content geblokkeerd",
+    "adultBlockedOn": "Volwassen content geblokkeerd voor dit apparaat",
+    "adultAllowed": "Volwassen content toegestaan voor dit apparaat",
     "intro": "Voeg een apparaat toe voor een unieke setuplink. Gebruik daarna de extensie of download het setupbestand voor je platform.",
     "addDevice": "Apparaat toevoegen",
     "name": "Naam",
@@ -76,6 +93,7 @@
     "failedToLoad": "Apparaten laden mislukt",
     "failedToAdd": "Apparaat toevoegen mislukt",
     "failedToRevoke": "Intrekken mislukt",
+    "failedToUpdate": "Apparaat bijwerken mislukt",
     "copiedToClipboard": "Gekopieerd naar klembord"
   },
   "blockAllow": {
@@ -95,7 +113,11 @@
     "failedToLoad": "Apparaten laden mislukt",
     "failedToLoadRules": "Regels laden mislukt",
     "failedToAdd": "Regel toevoegen mislukt",
-    "failedToDelete": "Regel verwijderen mislukt"
+    "failedToDelete": "Regel verwijderen mislukt",
+    "loadingPanel": "Laden…",
+    "recentlyBlockedTitle": "Onlangs geblokkeerd (live)",
+    "blockLogIntro": "Domeinen die geblokkeerd zijn toen dit apparaat onze DNS gebruikte. Voeg hierboven blokkeerregels toe om meer te blokkeren.",
+    "blockLogEmpty": "Nog geen geblokkeerde verzoeken. Zodra dit apparaat je DoH-URL gebruikt en een geblokkeerd domein raakt, verschijnt het hier."
   },
   "help": {
     "heading": "Twee manieren om DNS-beheer in te schakelen",
@@ -114,6 +136,12 @@
     "howItWorksLink": "Hoe het werkt (startpagina)"
   },
   "settings": {
+    "interfaceLanguage": "Interfacetaal",
+    "interfaceLanguageHint": "Opgeslagen op je account en gebruikt in het hele dashboard.",
+    "english": "English",
+    "dutch": "Nederlands",
+    "languageSaveFailed": "Taalvoorkeur opslaan mislukt.",
+    "languageUpdated": "Taalvoorkeur opgeslagen.",
     "displayName": "Weergavenaam",
     "displayNamePlaceholder": "Je naam",
     "saveChanges": "Wijzigingen opslaan",
@@ -149,5 +177,27 @@
     "yourControlDesc": "Jij bepaalt welke sites je per apparaat blokkeert of toestaat; je kunt een apparaat altijd intrekken",
     "peaceOfMindTitle": "Gebruik met een gerust hart",
     "peaceOfMindDesc": "Gebruik DNS-beheer met een gerust hart. We bewaren alleen de gegevens die nodig zijn voor de dienst en verkopen of delen ze niet met derden voor marketing."
+  },
+  "helpPanel": {
+    "simpleGuide": "Eenvoudige gids",
+    "heroTitle": "Verbind je apparaten met DMS Control",
+    "heroLead": "Je typt hier geen klassiek DNS-nummer in. Elk apparaat krijgt een persoonlijke beveiligde link (DNS-over-HTTPS). Je browser gebruikt die voor lookups: alleen domeinen op je blokkeerlijst (of optionele volwassenfilter) worden gestopt; de rest laadt normaal. Toestaan-regels heffen een blokkade voor specifieke sites op.",
+    "openDevices": "Open Apparaten",
+    "openDevicesSub": "Voeg een apparaat toe en kopieer daar je link",
+    "threeSteps": "Drie stappen",
+    "step1Title": "Ga naar Apparaten",
+    "step1Body": "Voeg een telefoon, laptop of ander apparaat toe. Elk heeft een eigen link en regels.",
+    "step2Title": "Kopieer je beveiligde DNS-link",
+    "step2Body": "Gebruik Kopiëren naast de lange URL—dat plak je, geen normaal site-adres voor browsen.",
+    "step3Title": "Plak in Firefox, Chrome of je systeem",
+    "step3Body": "Volg de gidsen hieronder of download een setupbestand bij Apparaten voor je hele computer.",
+    "dohSectionTitle": "Je DNS-links (zelfde als bij Apparaten)",
+    "manageDevices": "Beheren bij Apparaten →",
+    "dohLoading": "Je apparaten laden…",
+    "dohEmpty": "Je hebt nog geen apparaat. Voeg er een toe op de pagina Apparaten—dan verschijnt je persoonlijke link hier.",
+    "addDeviceCta": "Apparaat toevoegen",
+    "whereToPaste": "Waar je de link plakt",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd!"
   }
 }

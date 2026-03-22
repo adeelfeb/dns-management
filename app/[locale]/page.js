@@ -84,11 +84,8 @@ export default function HomePage() {
             <Link href={howItWorksHash} className="text-stone-600 hover:text-primary-600 text-[15px] font-medium transition-colors">
               {tCommon('nav.howItWorks')}
             </Link>
-            <Link href="/login" className="text-stone-600 hover:text-primary-600 text-[15px] font-medium transition-colors">
+            <Link href="/auth" className="nav-button rounded-full px-5 py-2.5 text-[15px] font-semibold">
               {tCommon('nav.logIn')}
-            </Link>
-            <Link href="/signup" className="nav-button rounded-full px-5 py-2.5 text-[15px] font-semibold">
-              {tCommon('nav.signUp')}
             </Link>
             <LocaleSwitcher />
           </nav>
@@ -112,13 +109,13 @@ export default function HomePage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
               <Link
-                href="/signup"
+                href="/auth?mode=signup"
                 className="rounded-full bg-gradient-to-r from-primary-500 to-primary-600 px-7 py-3.5 sm:px-8 sm:py-4 text-white font-semibold text-base sm:text-lg hover:from-primary-600 hover:to-primary-700 shadow-soft-teal hover:shadow-xl hover:shadow-primary-500/25 transition-all duration-200"
               >
                 {t('hero.getStarted')}
               </Link>
               <Link
-                href="/login"
+                href="/auth"
                 className="rounded-full border-2 border-stone-200 px-7 py-3.5 sm:px-8 sm:py-4 font-semibold text-stone-700 text-base sm:text-lg hover:bg-stone-50 hover:border-primary-200 hover:text-primary-700 transition-colors duration-200"
               >
                 {t('hero.logIn')}
@@ -207,13 +204,13 @@ export default function HomePage() {
         <p className="text-stone-600 mb-6 text-lg">{t('cta.tagline')}</p>
         <div className="flex flex-wrap justify-center gap-4">
           <Link
-            href="/signup"
+            href="/auth?mode=signup"
             className="rounded-full bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-3 text-white font-semibold hover:from-primary-600 hover:to-primary-700 shadow-soft-teal hover:shadow-lg hover:shadow-primary-500/25 transition-all duration-200"
           >
             {t('cta.signUp')}
           </Link>
           <Link
-            href="/login"
+            href="/auth"
             className="rounded-full border-2 border-stone-200 px-6 py-3 font-semibold text-stone-700 hover:bg-stone-50 hover:border-primary-200 hover:text-primary-700 transition-colors duration-200"
           >
             {t('cta.logIn')}
@@ -225,8 +222,8 @@ export default function HomePage() {
         <div className="container mx-auto px-4 py-8 max-w-5xl flex flex-wrap justify-between items-center gap-4">
           <span className="text-stone-500 text-sm font-medium">{tCommon('footer.siteName')}</span>
           <nav className="flex gap-6 text-sm">
-            <Link href="/login" className="text-stone-500 hover:text-primary-600 transition-colors">{tCommon('nav.login')}</Link>
-            <Link href="/signup" className="text-stone-500 hover:text-primary-600 transition-colors">{tCommon('nav.signUp')}</Link>
+            <Link href="/auth" className="text-stone-500 hover:text-primary-600 transition-colors">{tCommon('nav.login')}</Link>
+            <Link href="/auth?mode=signup" className="text-stone-500 hover:text-primary-600 transition-colors">{tCommon('nav.signUp')}</Link>
             <Link href="/dashboard" className="text-stone-500 hover:text-primary-600 transition-colors">{tCommon('nav.dashboard')}</Link>
             <Link href="/privacy-policy" className="text-stone-500 hover:text-primary-600 transition-colors">{tCommon('nav.privacy')}</Link>
           </nav>

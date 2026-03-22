@@ -1,6 +1,7 @@
 import { getUserFromRequest, extractTokenFromRequest } from '../../../lib/auth';
 import { jsonError, jsonSuccess } from '../../../lib/response';
 import { applyCors } from '../../../utils';
+import { normalizeUserLocale } from '../../../lib/userLocale';
 
 function sanitizeUser(userDoc) {
   if (!userDoc) return null;
@@ -11,6 +12,9 @@ function sanitizeUser(userDoc) {
     role: userDoc.role || 'base_user',
     roleRef: userDoc.roleRef,
     createdAt: userDoc.createdAt,
+    preferences: {
+      locale: normalizeUserLocale(userDoc.preferences?.locale),
+    },
   };
 }
 

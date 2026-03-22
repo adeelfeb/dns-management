@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export default function Header({
-  title = 'Design n Dev',
+  title = 'DMS Control',
   navItems = [
     { href: '/dashboard', label: 'Dashboard' },
   ],
@@ -14,7 +14,7 @@ export default function Header({
             <Link href="/" className="logo-link">
               <img 
                 src="/logo.svg" 
-                alt="Design n Dev Logo" 
+                alt="DMS Control" 
                 className="logo-img"
               />
             </Link>

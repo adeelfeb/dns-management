@@ -11,8 +11,13 @@
     "loggingOut": "LOGGING OUT…"
   },
   "brand": {
-    "title": "DNS Dashboard",
+    "title": "DMS Control",
+    "subtitle": "Dashboard",
     "user": "User"
+  },
+  "layout": {
+    "language": "Language",
+    "languageShort": "Lang"
   },
   "overview": {
     "intro": "You have {count} device. Add a device to get started, then manage block/allow lists below.",
@@ -54,6 +59,18 @@
   },
   "logoutConfirm": "Are you sure you want to log out?",
   "devices": {
+    "longIntro": "Each device gets a personal DNS link. When a phone, PC, or browser uses that link, lookups go through this service: we apply your block/allow rules (and optional adult blocking), log blocks to your dashboard, then answer or forward the query.",
+    "longIntroSecondary": "Need help? See setup steps for each device type on the",
+    "homePageLink": "home page",
+    "setupForSystem": "Download setup for your system:",
+    "setupFiles": "Setup files:",
+    "extensionBundle": "Extension bundle:",
+    "extensionBundleChrome": "Bundle for Chrome extension:",
+    "extensionFilename": "dns-control-config.json",
+    "blockAdult": "Block adult content (porn, explicit sites)",
+    "adultBlocked": "Adult content blocked",
+    "adultBlockedOn": "Adult content blocked for this device",
+    "adultAllowed": "Adult content allowed for this device",
     "intro": "Add a device to get a unique setup link. Then use the extension or download the setup file for your platform.",
     "addDevice": "Add device",
     "name": "Name",
@@ -76,6 +93,7 @@
     "failedToLoad": "Failed to load devices",
     "failedToAdd": "Failed to add device",
     "failedToRevoke": "Failed to revoke",
+    "failedToUpdate": "Failed to update device",
     "copiedToClipboard": "Copied to clipboard"
   },
   "blockAllow": {
@@ -95,7 +113,11 @@
     "failedToLoad": "Failed to load devices",
     "failedToLoadRules": "Failed to load rules",
     "failedToAdd": "Failed to add rule",
-    "failedToDelete": "Failed to delete rule"
+    "failedToDelete": "Failed to delete rule",
+    "loadingPanel": "Loading…",
+    "recentlyBlockedTitle": "Recently blocked (live)",
+    "blockLogIntro": "Domains that were blocked when this device used our DNS. Add block rules above to block more.",
+    "blockLogEmpty": "No blocked requests yet. Once this device uses your DoH URL and hits a blocked domain, it will appear here."
   },
   "help": {
     "heading": "Two ways to enable DNS control",
@@ -114,6 +136,12 @@
     "howItWorksLink": "How it works (home page)"
   },
   "settings": {
+    "interfaceLanguage": "Interface language",
+    "interfaceLanguageHint": "Saved to your account and used across the dashboard.",
+    "english": "English",
+    "dutch": "Nederlands",
+    "languageSaveFailed": "Could not save language preference.",
+    "languageUpdated": "Language preference saved.",
     "displayName": "Display name",
     "displayNamePlaceholder": "Your name",
     "saveChanges": "Save changes",
@@ -149,5 +177,27 @@
     "yourControlDesc": "You decide which sites to block or allow per device; you can revoke a device at any time",
     "peaceOfMindTitle": "Enjoy Complete Peace of Mind",
     "peaceOfMindDesc": "Use DNS control with peace of mind. We keep only the data needed to provide the service and do not sell or share it with third parties for marketing."
+  },
+  "helpPanel": {
+    "simpleGuide": "Simple guide",
+    "heroTitle": "Connect your devices to DMS Control",
+    "heroLead": "You don’t type a classic “DNS number” here. Each device gets a personal secure link (DNS-over-HTTPS). Your browser uses it for lookups: only domains on your block list (or optional adult filter) are stopped; everything else loads as usual. Allow rules undo a block for specific sites.",
+    "openDevices": "Open Devices",
+    "openDevicesSub": "Add a device and copy your link there",
+    "threeSteps": "Three steps",
+    "step1Title": "Go to Devices",
+    "step1Body": "Add a phone, laptop, or another device. Each one gets its own link and rules.",
+    "step2Title": "Copy your secure DNS link",
+    "step2Body": "Use Copy next to the long URL—that’s what you paste, not a normal site address for browsing.",
+    "step3Title": "Paste into Firefox, Chrome, or your system",
+    "step3Body": "Follow the guides below, or download a setup file from Devices for your whole computer.",
+    "dohSectionTitle": "Your DNS links (same as on Devices)",
+    "manageDevices": "Manage in Devices →",
+    "dohLoading": "Loading your devices…",
+    "dohEmpty": "You don’t have a device yet. Add one on the Devices page—then your personal link will show here.",
+    "addDeviceCta": "Add a device",
+    "whereToPaste": "Where to paste the link",
+    "copy": "Copy",
+    "copied": "Copied!"
   }
 }
